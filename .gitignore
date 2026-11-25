@@ -1,0 +1,16 @@
+node_modules/
+3min-rpg/dist/
+.DS_Store
+test-results/
+infra/cloudflare/*.tfvars
+infra/cloudflare/*.tfvars.json
+infra/cloudflare/.terraform/
+infra/cloudflare/*.tfstate
+infra/cloudflare/*.tfstate.*
+infra/cloudflare/*.tfplan
+infra/cloudflare/.generated/
+infra/cloudflare/.wrangler/
+infra/cloudflare/.dev.vars
+infra/cloudflare/.env*
+!infra/cloudflare/.env.local.example
+.wrangler/

@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and replace every value locally. Never commit that copy.
+account_id            = "00000000000000000000000000000000"
+workers_dev_subdomain = "replace-with-account-subdomain"
+worker_name           = "tensei-private-games"
+owner_email           = "owner@example.invalid"
+access_team_domain    = "replace-with-team.cloudflareaccess.com"

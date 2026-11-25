@@ -1,0 +1,30 @@
+{
+  "name": "tensei-lab",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node 3min-rpg/scripts/build.mjs",
+    "test": "node --disable-warning=ExperimentalWarning --test 3min-rpg/tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "dev": "npm run build && node 3min-rpg/scripts/serve.mjs",
+    "preview": "node 3min-rpg/scripts/serve.mjs",
+    "effects:mcp": "tsparticles-mcp",
+    "cf:with-env": "node --env-file-if-exists=infra/cloudflare/.env.local infra/cloudflare/scripts/run-with-env.mjs",
+    "cf:prepare": "node infra/cloudflare/scripts/prepare-wrangler-config.mjs",
+    "cf:bootstrap-subdomain": "node infra/cloudflare/scripts/bootstrap-workers-subdomain.mjs",
+    "cf:worker:typecheck": "tsc --project infra/cloudflare/tsconfig.worker.json",
+    "cf:terraform:check": "terraform -chdir=infra/cloudflare fmt -check && terraform -chdir=infra/cloudflare validate",
+    "cf:check": "npm run build && npm run typecheck && npm run cf:worker:typecheck && node --test infra/cloudflare/worker/*.test.ts infra/cloudflare/scripts/*.test.mjs",
+    "cf:deploy:private": "npm run cf:check && npm run cf:prepare && wrangler deploy --config infra/cloudflare/.generated/wrangler.private.jsonc"
+  },
+  "devDependencies": {
+    "@tsparticles/mcp-server": "4.6.0",
+    "jose": "6.1.3",
+    "tsparticles": "4.6.0",
+    "typescript": "~5.9.3",
+    "wrangler": "4.168.0"
+  }
+}
