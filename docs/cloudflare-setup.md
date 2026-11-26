@@ -104,7 +104,7 @@ Node.js 24以上、プロジェクトの依存関係（`npm ci`）、Terraform 1
 
 ### HD-2D配信経路の追加（2026-11-26）
 
-HD-2D実験は、同じ本人専用URLの[/hd-2d/](https://tensei-private-games.tensei-lab.workers.dev/hd-2d/)へ配置する。現在は配信確認用の入口で、3D実験本体は未実装。HTMLのビルド・配置は[HD-2D README](../hd-2d/README.md)を参照する。
+HD-2D実験は、同じ本人専用URLの[/hd-2d/](https://tensei-private-games.tensei-lab.workers.dev/hd-2d/)へ配置する。この節は入口だけを配信した時点の記録。現在の背景表示版は次節を参照。HTMLのビルド・配置は[HD-2D README](../hd-2d/README.md)を参照する。
 
 - 既存6本のHTMLをサイト直下、HD-2Dの`index.html`を`/hd-2d/`配下へ集約し、計7本を実デプロイした。
 - 配布対象は各`dist/`直下の通常のHTMLだけ。非HTML、サブディレクトリ、ソース、認証情報を取り込まず、symlinkや必須index欠落は失敗させる。
@@ -113,3 +113,17 @@ HD-2D実験は、同じ本人専用URLの[/hd-2d/](https://tensei-private-games.
 - 実URLの`/`、`/game1.html`、`/fullscreen-mock.html`、`/effect-catalog.html`、`/hd-2d/`、`/hd-2d/index.html`は、未認証で302となりAccessログインへ移動した。HD-2Dの2パスは偽JWT付きでも同様に遮断された。
 - デプロイ前後のCloudflare API読み取りで、本人メール1件だけのAllowポリシーとプレビューURL無効化を確認した。Workerの認証処理とTerraformのAccess設定は変更していない。
 - ブラウザ接続は利用できず、ログイン後の入口表示とスマホでの実操作は未確認。3Dの品質・性能検証は本体実装後に行う。
+
+
+### 街・森の背景表示版への更新（2026-11-26）
+
+`hd-2d/`にBabylon.jsの共通表示基盤、ファンタジーの街と森、材質別の手続き的テクスチャを実装し、同じ本人専用URLへ反映した。
+
+- Version ID: `560fe9ab-e021-47da-9f24-0ee8c28995ac`。既存ゲームも含めて同じ配布手順を使用した。
+- `npm run build`、`npm test`（42件）、`npm run typecheck`、`npm run cf:check`が成功。HD-2Dの型検査と4テスト、配布・認証の11テストを含む。
+- ネイティブChromeで単体HTMLを直接開き、街・森の描画、昼夕の光、時間停止中のズームとマップ切替、設定JSONの復元を確認した。生成済みHTMLのJavaScript構文と外部参照の不在も検査した。
+- Chromeのスマホエミュレーション（393×852）で、縦画面の構図と折り畳み調整パネルを確認した。実機のiOS・Androidでの操作・性能計測は未実施。
+- デプロイ後、ログイン済みChromeから実URLを開き、街の表示と森・夕景への切替を確認した。
+- `/hd-2d/`と`/hd-2d/index.html`は未認証・偽JWTで全件302のAccessログインへ移動した。Workerの認証処理とAccess設定は変更していない。
+
+今回は共通基盤と背景表示の試作。キャラクター比較、被写界深度、実機での継続的な性能測定は後続とする。

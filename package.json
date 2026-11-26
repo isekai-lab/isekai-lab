@@ -8,6 +8,8 @@
   "scripts": {
     "build": "node 3min-rpg/scripts/build.mjs",
     "hd2d:build": "node hd-2d/scripts/build.mjs",
+    "hd2d:typecheck": "tsc --project hd-2d/tsconfig.json",
+    "hd2d:test": "node --disable-warning=ExperimentalWarning --test hd-2d/tests/*.test.ts",
     "test": "node --disable-warning=ExperimentalWarning --test 3min-rpg/tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "dev": "npm run build && node 3min-rpg/scripts/serve.mjs",
@@ -19,11 +21,13 @@
     "cf:assets": "node infra/cloudflare/scripts/collect-assets.mjs",
     "cf:worker:typecheck": "tsc --project infra/cloudflare/tsconfig.worker.json",
     "cf:terraform:check": "terraform -chdir=infra/cloudflare fmt -check && terraform -chdir=infra/cloudflare validate",
-    "cf:check": "npm run build && npm run hd2d:build && npm run typecheck && npm run cf:assets && npm run cf:worker:typecheck && node --test infra/cloudflare/worker/*.test.ts infra/cloudflare/scripts/*.test.mjs",
+    "cf:check": "npm run build && npm run hd2d:build && npm run typecheck && npm run hd2d:typecheck && npm run hd2d:test && npm run cf:assets && npm run cf:worker:typecheck && node --test infra/cloudflare/worker/*.test.ts infra/cloudflare/scripts/*.test.mjs",
     "cf:deploy:private": "npm run cf:check && npm run cf:prepare && wrangler deploy --config infra/cloudflare/.generated/wrangler.private.jsonc"
   },
   "devDependencies": {
+    "@babylonjs/core": "9.37.2",
     "@tsparticles/mcp-server": "4.6.0",
+    "esbuild": "0.28.2",
     "jose": "6.1.3",
     "tsparticles": "4.6.0",
     "typescript": "~5.9.3",
