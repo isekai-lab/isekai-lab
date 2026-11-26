@@ -83,9 +83,11 @@ npm run cf:with-env -- npm run cf:deploy:private
 
 No additional Worker, hostname, or Access policy is needed. The `/hd-2d/` paths
 use the same hostname restriction and owner-only JWT verification as the games.
-The HD-2D viewer renders fantasy town and forest maps with shared camera,
-lighting, effects, and settings controls. Future experiments should emit
-self-contained HTML files directly into `hd-2d/dist/`.
+The HD-2D viewer provides integrated, map, and character experiment pages
+(`index.html`, `maps.html`, `characters.html`). The map benchmarks cover fantasy
+town, forest, and cave scenes. These pages share camera, lighting, effects,
+and settings code; each output remains self-contained. Future experiments
+should emit self-contained HTML files directly into `hd-2d/dist/`.
 
 ## Defense in depth
 

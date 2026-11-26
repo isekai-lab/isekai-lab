@@ -3,12 +3,14 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, rmSync } from "node:fs";
 import { Script } from "node:vm";
 import test from "node:test";
+import { VertexData } from "@babylonjs/core";
 import { defaultSettings, validSettings } from "../src/contracts/index.ts";
 import { abortBenchmark, beginBenchmark, benchmarkPercentiles, captureBenchmark, markBenchmarkReady } from "../src/common/benchmark.ts";
 import { normalizeSettings } from "../src/common/settings.ts";
 import { createWalkCourse } from "../src/fixtures/walk-course.ts";
-import { bridgeSpansWaterway, mapHasRequiredStructure, maps, seeded } from "../src/maps/definitions.ts";
+import { bridgeSpansWaterway, mapHasRequiredStructure, maps, seeded, solidTerrainHeightAt } from "../src/maps/definitions.ts";
 import { createMapWalkSurface } from "../src/maps/walk.ts";
+import { joinedPathIndices } from "../src/maps/world.ts";
 
 const root = new URL("..", import.meta.url).pathname;
 const build = (...args: string[]) => execFileSync(process.execPath, ["scripts/build.mjs", ...args], { cwd: root, encoding: "utf8" });
@@ -52,6 +54,36 @@ test("map art contracts keep continuous routes and map-specific landmarks", () =
     const walk = createMapWalkSurface(map);
     assert.ok(walk.surfaceIds.some((id) => id.includes(":bridge:")), `${map.id} bridge surface`);
     assert.ok(walk.spawn.surfaceId.length > 0, `${map.id} spawn surface`);
+  }
+});
+
+test("joined path front faces match Babylon ground orientation", () => {
+  const ground = VertexData.CreateGround({ width: 2, height: 2, subdivisions: 1 });
+  const crossY = (positions: ArrayLike<number>, indices: ArrayLike<number>) => {
+    const [a, b, c] = [indices[0] * 3, indices[1] * 3, indices[2] * 3];
+    return (positions[b + 2] - positions[a + 2]) * (positions[c] - positions[a]) -
+      (positions[b] - positions[a]) * (positions[c + 2] - positions[a + 2]);
+  };
+  const frontSign = Math.sign(crossY(ground.positions!, ground.indices!));
+  const positions = [1, 0, -1, -1, 0, -1, 1, 0, 0, -1, 0, 0, 1, 0, 1, -1, 0, 1];
+  const indices = joinedPathIndices(3);
+  assert.ok(indices.every((index) => index >= 0 && index < positions.length / 3));
+  for (let start = 0; start < indices.length; start += 3) {
+    assert.equal(Math.sign(crossY(positions, indices.slice(start, start + 3))), frontSign);
+  }
+});
+
+test("solid buildings and stair tops meet their declared terrain", () => {
+  for (const map of Object.values(maps)) {
+    for (const building of map.placements.filter((item) => item.kind === "house" || item.kind === "ruin")) {
+      assert.equal(solidTerrainHeightAt(map, building.x, building.z), building.height ?? 0, `${map.id} ${building.kind} footing`);
+    }
+    for (const stair of map.stairs) {
+      const beyondTop = stair.run / 2 + .08;
+      const x = stair.x + Math.sin(stair.rotation) * beyondTop;
+      const z = stair.z + Math.cos(stair.rotation) * beyondTop;
+      assert.equal(solidTerrainHeightAt(map, x, z), stair.rise, `${map.id} stair top joins raised terrain`);
+    }
   }
 });
 

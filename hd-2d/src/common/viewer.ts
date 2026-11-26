@@ -76,8 +76,10 @@ export function startViewer(page: Page): void {
         if (report) {
             report = undefined;
             byId<HTMLButtonElement>("export-report").disabled = true;
-            summary.textContent = `計測結果は失効しました: ${reason}`;
+            summary.textContent = `未計測 · 条件変更: ${reason}`;
         }
+        // A completed capture must not regenerate a cleared report on the next frame.
+        benchmark = undefined;
     };
     const syncUi = () => {
         document.querySelectorAll<HTMLButtonElement>("[data-map]").forEach((button) => {
@@ -112,14 +114,14 @@ export function startViewer(page: Page): void {
         const environment = page === "characters" ? undefined : maps[settings.mapId].environment;
         const cave = environment?.palette === "cave";
         sun.direction.set(settings.dusk ? -.78 : -.48, settings.dusk ? -.58 : -1, settings.dusk ? .22 : .3);
-        sun.intensity = cave ? .85 : settings.dusk ? 1.22 : 1.55;
+        sun.intensity = settings.dusk ? 1.22 : environment?.sunIntensity ?? 1.55;
         sun.diffuse = Color3.FromHexString(settings.dusk ? "#ef9d68" : environment?.sunColor ?? "#fff0cc");
-        sky.intensity = cave ? .25 : settings.dusk ? .46 : .68;
+        sky.intensity = settings.dusk ? .46 : environment?.skyIntensity ?? .68;
         sky.diffuse = Color3.FromHexString(settings.dusk ? "#7890b5" : environment?.skyColor ?? "#b7d0d0");
-        sky.groundColor = Color3.FromHexString(cave ? "#182033" : settings.dusk ? "#26354e" : "#40535a");
+        sky.groundColor = Color3.FromHexString(settings.dusk ? "#26354e" : environment?.groundColor ?? "#40535a");
         scene.clearColor = Color4.FromHexString(cave ? "#101722ff" : settings.dusk ? "#17283cff" : `${environment?.fogColor ?? "#8aa1a8"}ff`);
         scene.fogColor = Color3.FromHexString(settings.dusk ? "#5f7184" : environment?.fogColor ?? "#8aa1a8");
-        scene.ambientColor = Color3.FromHexString(settings.dusk || cave ? "#263653" : "#6c7f80");
+        scene.ambientColor = Color3.FromHexString(settings.dusk ? "#263653" : environment?.ambientColor ?? "#6c7f80");
         scene.fogDensity = settings.effects ? environment?.fogDensity ?? .008 : 0;
         scene.shadowsEnabled = settings.shadows;
         pipeline.bloomEnabled = settings.effects;
@@ -161,6 +163,7 @@ export function startViewer(page: Page): void {
         applyCamera();
         applyRendering();
         syncUi();
+        setStatus(page === "characters" ? "準備完了 · 固定歩行コース" : `準備完了 · ${maps[settings.mapId].name}`);
     };
     const finishBenchmark = () => {
         if (!benchmark || report)
@@ -203,6 +206,7 @@ export function startViewer(page: Page): void {
         };
         summary.textContent = `完了: ${percentiles.sampleCount} samples / interval p95 ${percentiles.frameIntervalMs.p95?.toFixed(1)} ms / CPU p95 ${percentiles.cpuSceneRenderMs.p95?.toFixed(1)} ms`;
         byId<HTMLButtonElement>("export-report").disabled = false;
+        benchmark = undefined;
     };
     const startBenchmark = () => {
         if (page === "characters")

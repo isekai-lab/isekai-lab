@@ -8,7 +8,7 @@ export type PathStrip = Readonly<{ points: readonly Vec2[]; width: number; mater
 export type StairSpec = Readonly<{ x: number; z: number; rotation: number; width: number; run: number; rise: number; steps: number }>;
 export type BridgeSpec = Readonly<{ x: number; z: number; rotation: number; length: number; width: number; deckHeight: number; style: "stone" | "wood" }>;
 
-export type ItemKind = "house" | "tree" | "rock" | "lantern" | "ruin" | "market" | "barrels" | "stump" | "shrub" | "flowers" | "crystal" | "caveWall" | "stalagmite" | "log";
+export type ItemKind = "house" | "tree" | "rock" | "lantern" | "ruin" | "market" | "barrels" | "stump" | "shrub" | "flowers" | "crystal" | "caveWall" | "caveArch" | "stalagmite" | "log";
 export type Placement = Readonly<{ kind: ItemKind; x: number; z: number; height?: number; scale?: number; rotation?: number; variant?: number }>;
 
 export type MapDefinition = Readonly<{
@@ -35,7 +35,11 @@ export type MapDefinition = Readonly<{
     fogDensity?: number;
     palette?: "day" | "forest" | "cave";
     sunColor?: string;
+    sunIntensity?: number;
     skyColor?: string;
+    skyIntensity?: number;
+    groundColor?: string;
+    ambientColor?: string;
     fogColor?: string;
   }>;
 }>;

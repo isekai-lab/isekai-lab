@@ -13,9 +13,9 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
     size: 16,
     waterway: { axis: "z", center: -3.8, width: 2.8, length: 31 },
     levels: [
-      { x: -6.6, z: 5.9, width: 8.2, depth: 6.2, height: 1.05, material: "stone" },
-      { x: 6.4, z: 5.9, width: 7.8, depth: 6.2, height: 1.05, material: "stone" },
-      { x: -6.9, z: -6.3, width: 7.3, depth: 5.5, height: 0.45, material: "stone" },
+      { x: -8, z: 5.9, width: 5.4, depth: 6.2, height: 1.05, material: "stone" },
+      { x: 3.6, z: 5.9, width: 12, depth: 6.2, height: 1.05, material: "stone" },
+      { x: -8, z: -6.3, width: 5.4, depth: 5.5, height: 0.45, material: "stone" },
     ],
     paths: [
       { points: [{ x: -12, z: -1.1 }, { x: -6, z: -1.1 }, { x: -3.8, z: -1.1 }, { x: 1, z: -1 }, { x: 10, z: -1 }], width: 2.75, material: "cobble" },
@@ -23,9 +23,9 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
       { points: [{ x: 7, z: 2.1 }, { x: 4, z: 2.7 }, { x: 3.2, z: 4.1 }], width: 1.8, material: "cobble" },
     ],
     stairs: [
-      { x: -3.1, z: 3.8, rotation: 0, width: 1.45, run: 2.5, rise: 1.05, steps: 6 },
+      { x: -6.2, z: 3.8, rotation: 0, width: 1.45, run: 2.5, rise: 1.05, steps: 6 },
       { x: 3.15, z: 3.8, rotation: 0, width: 1.45, run: 2.5, rise: 1.05, steps: 6 },
-      { x: -7.1, z: -3.55, rotation: 0, width: 1.3, run: 1.7, rise: 0.45, steps: 4 },
+      { x: -7.1, z: -3.55, rotation: Math.PI, width: 1.3, run: 1.7, rise: 0.45, steps: 4 },
     ],
     bridges: [
       { x: -3.8, z: -1.1, rotation: 0, length: 4.2, width: 2.25, deckHeight: 0.42, style: "stone" },
@@ -33,7 +33,7 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
     ],
     placements: [
       place("house", -8.2, 4.7, 1.05, 1.18, Math.PI / 2, 0),
-      place("house", -2.1, 5.7, 1.05, 1.04, Math.PI / 2, 2),
+      place("house", -.55, 5.7, 1.05, 1.04, Math.PI / 2, 2),
       place("house", 5.8, 5.1, 1.05, 1.25, -Math.PI / 2, 1),
       place("house", 8.6, -5.5, 0, 0.82, Math.PI - .1, 2),
       place("house", -9.8, -6.5, .45, .72, .12, 1),
@@ -51,10 +51,15 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
       place("shrub", -8.9, 2.3, 0, 0.8),
       place("flowers", -5.1, 3.1, 1.05, 1),
       place("flowers", 5.4, 3.1, 1.05, 0.9, 0, 1),
+      place("shrub", -11.2, -1.8, 0, 1.1),
+      place("shrub", 11.2, -1.2, 0, 1.2),
+      place("flowers", -10.4, -2.4, 0, 1.1, 0, 1),
+      place("barrels", 10.1, -2.8, 0, .8, -.2),
+      place("lantern", 6.7, -1.8),
     ],
     spawnHint: { x: 1.2, z: -1.1 },
     cameraTarget: { x: -1.2, y: 1.25, z: .4 },
-    environment: { cameraBeta: 1.1, cameraYaw: -1.2, orthoHalfHeight: 8.4, portraitHalfWidth: 7.7, sunColor: "#fff0cc", skyColor: "#b7d0d0", fogColor: "#8aa1a8" },
+    environment: { cameraBeta: 1.1, cameraYaw: -1.2, orthoHalfHeight: 8.4, portraitHalfWidth: 7.7, sunColor: "#ffe7bd", sunIntensity: 1.35, skyColor: "#a9c7c6", skyIntensity: .54, groundColor: "#35494d", ambientColor: "#596f70", fogColor: "#81999e" },
   },
   forest: {
     id: "forest",
@@ -63,7 +68,7 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
     size: 19,
     waterway: { axis: "z", center: 1.4, width: 2.5, length: 38 },
     levels: [
-      { x: -7, z: 5.6, width: 7.5, depth: 6.3, height: 0.5, material: "grass" },
+      { x: -7, z: 5.6, width: 7.5, depth: 6.5, height: 0.5, material: "grass" },
       { x: 7.8, z: -5.8, width: 5.3, depth: 5.5, height: 0.35, material: "grass" },
     ],
     paths: [
@@ -106,28 +111,41 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
     ],
     spawnHint: { x: -4.7, z: -1.1 },
     cameraTarget: { x: -.8, y: 1, z: .4 },
-    environment: { palette: "forest", cameraBeta: 1.08, cameraYaw: -1.16, orthoHalfHeight: 9, portraitHalfWidth: 7.5, fogDensity: .014, sunColor: "#e9f0bd", skyColor: "#93b9a0", fogColor: "#728d83" },
+    environment: { palette: "forest", cameraBeta: 1.08, cameraYaw: -1.16, orthoHalfHeight: 9, portraitHalfWidth: 7.5, fogDensity: .01, sunColor: "#f3dfad", sunIntensity: 1.15, skyColor: "#7da28d", skyIntensity: .48, groundColor: "#263f35", ambientColor: "#425d4e", fogColor: "#647f74" },
   },
   cave: {
     id: "cave", name: "灯火の晶洞", seed: 3901, size: 14,
     waterway: { axis: "x", center: -3.4, width: 2.5, length: 28 },
-    levels: [{ x: 4.5, z: 4.8, width: 6, depth: 4.7, height: 1, material: "stone" }],
+    levels: [{ x: 4.5, z: 4.8, width: 6, depth: 5.5, height: 1, material: "stone" }],
     paths: [{ points: [{ x: -11, z: -6.5 }, { x: -6, z: -4.3 }, { x: -3.4, z: -3.4 }, { x: 0, z: -.6 }, { x: 3.4, z: 2.5 }, { x: 7, z: 5.4 }], width: 1.65, material: "dirt" }],
     stairs: [{ x: 1.8, z: 1.1, rotation: .78, width: 1.5, run: 2.8, rise: 1, steps: 5 }],
     bridges: [{ x: -3.4, z: -3.4, rotation: Math.PI / 2, length: 3.6, width: 1.45, deckHeight: .38, style: "wood" }],
     placements: [
-      place("caveWall", -10, 6, 0, 1.55, .2), place("caveWall", -8, -7.5, 0, 1.45, -.3), place("caveWall", 8.6, -6.8, 0, 1.5, .1), place("caveWall", 10, 5.5, 0, 1.55, -.2),
-      place("caveWall", -1, 8.2, 0, 1.3), place("stalagmite", -6.2, 1.6, 0, 1.15), place("stalagmite", 5.5, -2.8, 0, 1.1),
+      place("caveWall", -10, 7.2, 0, 1.35, .05), place("caveWall", -6.2, 8, 0, 1.25, -.05), place("caveWall", -2.2, 8.4, 0, 1.3), place("caveWall", 2, 8.2, 0, 1.3), place("caveWall", 6.2, 7.7, 0, 1.3, .05), place("caveWall", 10, 6.5, 0, 1.4, -.1),
+      place("caveWall", -11.2, 2.8, 0, 1.2, Math.PI / 2), place("caveWall", 11, 1.8, 0, 1.25, Math.PI / 2),
+      place("caveArch", .4, .2, 0, 1.15, .78), place("stalagmite", -6.2, 1.6, 0, 1.15), place("stalagmite", 5.5, -2.8, 0, 1.1),
       place("crystal", -1.2, -4.6, 0, 1.15), place("crystal", 5.8, 3.6, 1, .95), place("lantern", .2, -.4), place("lantern", 4.8, 4.5, 1), place("ruin", 6.7, 5.2, 1, .9), place("rock", -8, 3.5, 0, 1.2),
     ],
     spawnHint: { x: -.7, z: -.8 },
-    cameraTarget: { x: -.4, y: 1.1, z: .1 }, environment: { palette: "cave", fogDensity: .024, cameraBeta: 1.1, cameraYaw: -1.18, orthoHalfHeight: 8.5, portraitHalfWidth: 7.2, sunColor: "#c07c62", skyColor: "#59647b", fogColor: "#303b52" },
+    cameraTarget: { x: -.4, y: 1.1, z: .1 }, environment: { palette: "cave", fogDensity: .018, cameraBeta: 1.1, cameraYaw: -1.18, orthoHalfHeight: 8.5, portraitHalfWidth: 7.2, sunColor: "#9f7768", sunIntensity: .42, skyColor: "#40516c", skyIntensity: .2, groundColor: "#151a25", ambientColor: "#202638", fogColor: "#252d40" },
   },
 };
 
 export function seeded(seed: number): () => number {
   let state = seed >>> 0;
   return () => ((state = (Math.imul(1664525, state) + 1013904223) >>> 0) / 4294967296);
+}
+
+export function solidTerrainHeightAt(map: MapDefinition, x: number, z: number): number | undefined {
+  if (Math.abs(x) > map.size || Math.abs(z) > map.size) return undefined;
+  const waterCross = map.waterway.axis === "z" ? x : z;
+  const waterAlong = map.waterway.axis === "z" ? z : x;
+  if (Math.abs(waterCross - map.waterway.center) <= map.waterway.width / 2 && Math.abs(waterAlong) <= map.waterway.length / 2) return undefined;
+  let height = 0;
+  for (const level of map.levels) {
+    if (Math.abs(x - level.x) <= level.width / 2 && Math.abs(z - level.z) <= level.depth / 2) height = Math.max(height, level.height);
+  }
+  return height;
 }
 
 export function bridgeSpansWaterway(map: MapDefinition, bridgeIndex = 0): boolean {

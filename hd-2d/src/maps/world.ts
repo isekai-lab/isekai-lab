@@ -25,7 +25,7 @@ export type WorldHandle = {
   dispose: () => void;
 };
 
-type PrimitiveKind = "box" | "cylinder" | "sphere" | "cone" | "rock";
+type PrimitiveKind = "box" | "cylinder" | "sphere" | "cone" | "rock" | "plane";
 
 class PrimitivePool {
   readonly casters: AbstractMesh[] = [];
@@ -52,6 +52,8 @@ class PrimitivePool {
       mesh = MeshBuilder.CreateCylinder(`source-${key}`, { diameterTop: 0, diameterBottom: 1, height: 1, tessellation: 7 }, this.scene);
     } else if (kind === "rock") {
       mesh = MeshBuilder.CreatePolyhedron(`source-${key}`, { type: 1, size: 0.5 }, this.scene);
+    } else if (kind === "plane") {
+      mesh = MeshBuilder.CreatePlane(`source-${key}`, { size: 1 }, this.scene);
     } else {
       mesh = MeshBuilder.CreateSphere(`source-${key}`, { diameter: 1, segments: 6 }, this.scene);
     }
@@ -119,6 +121,15 @@ function addGround(
   return ground;
 }
 
+export function joinedPathIndices(pointCount: number): number[] {
+  const indices: number[] = [];
+  for (let index = 0; index < pointCount - 1; index += 1) {
+    indices.push(index * 2 + 2, index * 2 + 1, index * 2);
+    indices.push(index * 2 + 2, index * 2 + 3, index * 2 + 1);
+  }
+  return indices;
+}
+
 function addPath(
   scene: Scene,
   root: TransformNode,
@@ -138,8 +149,7 @@ function addPath(
       right.push(path.points[index].x - offsetX, .05, path.points[index].z - offsetZ);
     }
     const positions = left.flatMap((value, index) => index % 3 === 0 ? [value, left[index + 1], left[index + 2], right[index], right[index + 1], right[index + 2]] : []);
-    const indices: number[] = [];
-    for (let index = 0; index < path.points.length - 1; index += 1) indices.push(index * 2, index * 2 + 1, index * 2 + 2, index * 2 + 1, index * 2 + 3, index * 2 + 2);
+    const indices = joinedPathIndices(path.points.length);
     const data = new VertexData();
     data.positions = positions;
     data.indices = indices;
@@ -169,7 +179,7 @@ function addTerrain(
       root,
       new Vector3(level.x, level.height / 2, level.z),
       new Vector3(level.width, level.height, level.depth),
-      level.material === "stone" ? materials.masonry : materials.grass,
+      definition.id === "cave" ? materials.caveRock : level.material === "stone" ? materials.masonry : materials.grass,
       Vector3.Zero(),
       false,
     );
@@ -187,6 +197,12 @@ function addTerrain(
       const bx = water.axis === "z" ? water.center + side * (water.width / 2 + bankWidth / 2) : 0;
       const bz = water.axis === "x" ? water.center + side * (water.width / 2 + bankWidth / 2) : 0;
       addGround(scene, root, "water-bank", water.axis === "z" ? bankWidth : bankLength, water.axis === "z" ? bankLength : bankWidth, bx, .075, bz, definition.id === "cave" ? materials.caveSoil : materials.moss);
+      for (let along = -water.length / 2 + 1.2; along < water.length / 2; along += 3.2) {
+        const jitter = Math.sin(along * 2.3 + side) * .22;
+        const px = water.axis === "z" ? bx + side * .18 : along + jitter;
+        const pz = water.axis === "z" ? along + jitter : bz + side * .18;
+        pool.add("rock", "shore-stone", root, new Vector3(px, .12, pz), new Vector3(.52, .25, .4), definition.id === "cave" ? materials.caveRock : materials.moss, new Vector3(0, along, 0), false);
+      }
     }
   }
   addPath(scene, root, definition, materials);
@@ -323,7 +339,9 @@ function addHouse(
   const width = variant === 2 ? 3.25 : 3.6;
   const depth = variant === 1 ? 3.45 : 3.05;
   const wallHeight = variant === 2 ? 2.45 : 2.65;
-  pool.box("house-wall", group, new Vector3(0, wallHeight / 2 + 0.18, 0), new Vector3(width, wallHeight, depth), materials.plaster);
+  const plaster = variant === 1 ? materials.plasterWarm : variant === 2 ? materials.plasterRose : materials.plaster;
+  const roof = variant === 1 ? materials.roofWarm : variant === 2 ? materials.roofSlate : materials.roof;
+  pool.box("house-wall", group, new Vector3(0, wallHeight / 2 + 0.18, 0), new Vector3(width, wallHeight, depth), plaster);
   pool.box("stone-foundation", group, new Vector3(0, 0.17, 0), new Vector3(width + 0.18, 0.34, depth + 0.18), materials.masonry);
 
   const front = -depth / 2 - 0.025;
@@ -367,7 +385,7 @@ function addHouse(
     depth,
     wallHeight + 0.12,
     ridgeY - wallHeight - 0.12,
-    materials.plaster,
+    plaster,
   );
   for (const side of [-1, 1]) {
     pool.box(
@@ -375,24 +393,26 @@ function addHouse(
       group,
       new Vector3(side * width * 0.27, roofY, 0),
       new Vector3(panelWidth, 0.2, depth + 0.72),
-      materials.roof,
+      roof,
       new Vector3(0, 0, -side * slope),
     );
   }
-  pool.box("roof-ridge", group, new Vector3(0, ridgeY, 0), new Vector3(0.22, 0.2, depth + 0.78), materials.roof);
+  pool.box("roof-ridge", group, new Vector3(0, ridgeY, 0), new Vector3(0.22, 0.2, depth + 0.78), roof);
   pool.box("door", group, new Vector3(0, 0.76, front - 0.08), new Vector3(0.72, 1.45, 0.1), materials.wood);
-  pool.box("door-awning", group, new Vector3(0, 2.05, front - .28), new Vector3(1.2, .12, .7), variant === 1 ? materials.canvas : materials.roof, new Vector3(.18, 0, 0));
+  pool.box("door-awning", group, new Vector3(0, 2.05, front - .28), new Vector3(1.2, .12, .7), variant === 1 ? materials.canvas : roof, new Vector3(.18, 0, 0));
   for (const side of [-1, 1]) {
     pool.box("warm-window", group, new Vector3(side * width * 0.29, 1.55, front - 0.09), new Vector3(0.62, 0.58, 0.08), materials.glow, Vector3.Zero(), false);
     pool.box("window-cross", group, new Vector3(side * width * 0.29, 1.55, front - 0.14), new Vector3(0.08, 0.64, 0.06), materials.wood);
+    pool.box("window-shutter", group, new Vector3(side * width * .29 - .4, 1.55, front - .13), new Vector3(.16, .64, .07), roof);
+    pool.box("window-shutter", group, new Vector3(side * width * .29 + .4, 1.55, front - .13), new Vector3(.16, .64, .07), roof);
     pool.box("window-box", group, new Vector3(side * width * .29, 1.2, front - .15), new Vector3(.78, .16, .18), materials.wood, Vector3.Zero(), false);
     pool.add("sphere", "window-flowers", group, new Vector3(side * width * .29, 1.31, front - .2), new Vector3(.48, .16, .13), materials.flower, Vector3.Zero(), false);
   }
   const chimneyX = variant % 2 ? -width * 0.28 : width * 0.28;
   pool.box("chimney", group, new Vector3(chimneyX, roofY + 0.75, 0.35), new Vector3(0.42, 1.2, 0.48), materials.masonry);
   if (variant !== 2) {
-    pool.box("dormer", group, new Vector3(-chimneyX * .55, roofY + .23, front * .35), new Vector3(.72, .62, .65), materials.plaster);
-    pool.box("dormer-roof", group, new Vector3(-chimneyX * .55, roofY + .58, front * .35), new Vector3(.92, .16, .84), materials.roof, new Vector3(.25, 0, 0));
+    pool.box("dormer", group, new Vector3(-chimneyX * .55, roofY + .23, front * .35), new Vector3(.72, .62, .65), plaster);
+    pool.box("dormer-roof", group, new Vector3(-chimneyX * .55, roofY + .58, front * .35), new Vector3(.92, .16, .84), roof, new Vector3(.25, 0, 0));
   }
 }
 
@@ -410,34 +430,55 @@ function addTree(
   group.position.set(item.x, item.height ?? 0, item.z);
   group.rotation.y = item.rotation ?? 0;
   group.scaling.setAll(scale);
-  const trunkHeight = variant === 1 ? 3.15 : 2.55;
-  pool.add("cylinder", "tree-trunk", group, new Vector3(0, trunkHeight / 2, 0), new Vector3(0.5, trunkHeight, 0.5), materials.wood);
-  for (const side of [-1, 1]) pool.add("cone", "tree-branch", group, new Vector3(side * .52, trunkHeight * .58, .05), new Vector3(.24, 1.25, .24), materials.wood, new Vector3(0, 0, side * 1.05));
-  if (variant === 1) {
-    pool.add("cone", "fir-crown", group, new Vector3(0, 2.4, 0), new Vector3(2.9, 2.7, 2.9), materials.darkLeaf);
-    pool.add("cone", "fir-crown", group, new Vector3(0, 3.45, 0), new Vector3(2.2, 2.4, 2.2), materials.leaf);
-  } else if (variant === 2) {
-    pool.add("sphere", "oak-crown", group, new Vector3(-0.55, 2.55, 0.05), new Vector3(2.15, 1.55, 1.8), materials.darkLeaf);
-    pool.add("sphere", "oak-crown", group, new Vector3(0.55, 2.75, 0.15), new Vector3(2.35, 1.75, 2), materials.leaf);
-    pool.add("sphere", "oak-crown", group, new Vector3(0, 3.55, -0.15), new Vector3(2.25, 1.65, 1.85), materials.leaf);
-  } else {
-    pool.add("sphere", "broadleaf-crown", group, new Vector3(-0.42, 2.55, 0), new Vector3(2.3, 1.65, 1.95), materials.darkLeaf);
-    pool.add("sphere", "broadleaf-crown", group, new Vector3(0.55, 2.75, 0.12), new Vector3(2.5, 1.8, 2.05), materials.leaf);
+  const trunkHeight = variant === 1 ? 3.05 : 2.6;
+  pool.add("cylinder", "tree-trunk", group, new Vector3(0, trunkHeight / 2, 0), new Vector3(.46, trunkHeight, .46), materials.wood);
+  for (const [x, y, angle] of [[-.42, 1.75, -.82], [.38, 2.02, .88], [.12, 2.3, .38]] as const) {
+    pool.add("cylinder", "tree-branch", group, new Vector3(x, y, .03), new Vector3(.18, .82, .18), materials.wood, new Vector3(0, 0, angle));
   }
+  const cards = variant === 1
+    ? [[0, 2.35, 2.65, 2.2, 0], [0, 3.15, 2.2, 2.1, Math.PI / 2], [0, 3.85, 1.55, 1.75, .35]] as const
+    : [[-.72, 2.45, 2.25, 1.8, -.2], [.05, 2.7, 2.7, 2.15, Math.PI / 2], [.75, 2.55, 2.2, 1.75, .18], [-.2, 3.45, 2.45, 1.9, .45], [.35, 3.35, 2.25, 1.8, 2.1]] as const;
+  cards.forEach(([x, y, width, height, rotation], index) => {
+    pool.add("plane", "leaf-cluster", group, new Vector3(x, y, index % 2 ? .12 : -.08), new Vector3(width, height, 1), index % 3 ? materials.leafCard : materials.darkLeafCard, new Vector3(0, rotation, 0));
+  });
 }
 
-function addCaveForm(root: TransformNode, pool: PrimitivePool, item: Placement, materials: WorldMaterials): void {
+function addCaveForm(scene: Scene, root: TransformNode, pool: PrimitivePool, item: Placement, materials: WorldMaterials, withLight: boolean): void {
   const scale = item.scale ?? 1;
   const y = item.height ?? 0;
   if (item.kind === "caveWall") {
+    const group = new TransformNode("continuous-cave-wall", scene);
+    group.parent = root;
+    group.position.set(item.x, y, item.z);
+    group.rotation.y = item.rotation ?? 0;
     for (let index = -1; index <= 1; index += 1) {
-      pool.add("rock", "stratified-cave-wall", root, new Vector3(item.x + index * .8 * scale, y + 1.55 * scale + Math.abs(index) * .22, item.z + (index % 2) * .32), new Vector3(2.25 * scale, 3.1 * scale, 1.35 * scale), materials.caveRock, new Vector3(.05 * index, item.rotation ?? 0, .14 * index));
+      const height = (3.2 + (index + 1) % 2 * .55) * scale;
+      pool.box("layered-cave-wall", group, new Vector3(index * 1.25 * scale, height / 2, index % 2 * .18), new Vector3(1.75 * scale, height, 2.25 * scale), materials.caveRock, new Vector3(0, .08 * index, .04 * index));
+      pool.add("rock", "wall-foot-rock", group, new Vector3(index * 1.3 * scale, .35 * scale, -1.05 * scale), new Vector3(1.25 * scale, .7 * scale, .8 * scale), materials.caveRock, new Vector3(0, index, 0));
+    }
+  } else if (item.kind === "caveArch") {
+    const group = new TransformNode("cave-arch", scene);
+    group.parent = root;
+    group.position.set(item.x, y, item.z);
+    group.rotation.y = item.rotation ?? 0;
+    for (const side of [-1, 1]) pool.box("arch-pier", group, new Vector3(side * 1.35 * scale, 1.65 * scale, 0), new Vector3(.85 * scale, 3.3 * scale, 1.35 * scale), materials.caveRock);
+    pool.box("arch-lintel", group, new Vector3(0, 3.45 * scale, 0), new Vector3(3.55 * scale, .9 * scale, 1.5 * scale), materials.caveRock);
+    for (const [x, height] of [[-.82, .85], [0, 1.2], [.76, .7]] as const) {
+      pool.add("cone", "attached-stalactite", group, new Vector3(x * scale, (3.05 - height / 2) * scale, 0), new Vector3(.42 * scale, height * scale, .42 * scale), materials.caveRock, new Vector3(0, 0, Math.PI));
     }
   } else if (item.kind === "stalagmite") {
-    pool.add("cone", "stalagmite", root, new Vector3(item.x, y + 1.05 * scale, item.z), new Vector3(1.25 * scale, 2.1 * scale, 1.25 * scale), materials.caveRock);
-    pool.add("cone", "stalactite", root, new Vector3(item.x + .8 * scale, y + 4.1 * scale, item.z - .35), new Vector3(.72 * scale, 1.8 * scale, .72 * scale), materials.caveRock, new Vector3(Math.PI, 0, 0));
+    for (const [x, z, height] of [[0, 0, 1.9], [.65, .18, 1.15], [-.55, .28, .9]] as const) {
+      pool.add("cone", "grounded-stalagmite", root, new Vector3(item.x + x * scale, y + height * scale / 2, item.z + z * scale), new Vector3(.8 * scale, height * scale, .8 * scale), materials.caveRock);
+    }
   } else if (item.kind === "crystal") {
     for (const [x, height, z] of [[0, 1.7, 0], [.42, 1.15, .12], [-.38, .9, .22]] as const) pool.add("cone", "crystal-cluster", root, new Vector3(item.x + x * scale, y + height * scale / 2, item.z + z * scale), new Vector3(.58 * scale, height * scale, .58 * scale), materials.crystal, new Vector3(0, item.rotation ?? 0, 0));
+    if (withLight) {
+      const light = new PointLight("crystal-light", new Vector3(item.x, y + 1.15 * scale, item.z), scene);
+      light.parent = root;
+      light.diffuse = Color3.FromHexString("#79bde1");
+      light.intensity = .48;
+      light.range = 4.5;
+    }
   } else if (item.kind === "log") {
     pool.add("cylinder", "fallen-log", root, new Vector3(item.x, y + .28 * scale, item.z), new Vector3(.48 * scale, 2.1 * scale, .48 * scale), materials.wood, new Vector3(0, 0, Math.PI / 2));
   }
@@ -450,6 +491,7 @@ function addLantern(
   item: Placement,
   materials: WorldMaterials,
   withLight: boolean,
+  caveLight = false,
 ): void {
   const y = item.height ?? 0;
   pool.box("lantern-post", root, new Vector3(item.x, y + 1.05, item.z), new Vector3(0.14, 2.1, 0.14), materials.iron);
@@ -459,8 +501,8 @@ function addLantern(
     const light = new PointLight("lantern-light", new Vector3(item.x + 0.42, y + 1.85, item.z), scene);
     light.parent = root;
     light.diffuse = Color3.FromHexString("#ffbd73");
-    light.intensity = 0.4;
-    light.range = 4.5;
+    light.intensity = caveLight ? 1.15 : 0.4;
+    light.range = caveLight ? 6.2 : 4.5;
   }
 }
 
@@ -539,13 +581,20 @@ export function createWorld(scene: Scene, definition: MapDefinition, lightweight
   for (const bridge of definition.bridges) addBridge(scene, root, pool, bridge, materials);
 
   let lanternLights = 0;
+  let crystalLights = 0;
   for (const item of definition.placements) {
     if (item.kind === "house") addHouse(scene, root, pool, item, materials);
     else if (item.kind === "tree") addTree(scene, root, pool, item, materials);
-    else if (item.kind === "lantern") addLantern(scene, root, pool, item, materials, lanternLights++ < 2 && !lightweight);
+    else if (item.kind === "lantern") {
+      const useLight = definition.id === "cave" ? lanternLights++ < 2 : lanternLights++ < 2 && !lightweight;
+      addLantern(scene, root, pool, item, materials, useLight, definition.id === "cave");
+    }
     else if (item.kind === "market") addMarket(scene, root, pool, item, materials);
     else if (item.kind === "ruin") addRuin(scene, root, pool, item, materials);
-    else if (["caveWall", "stalagmite", "crystal"].includes(item.kind)) addCaveForm(root, pool, item, materials);
+    else if (["caveWall", "caveArch", "stalagmite", "crystal"].includes(item.kind)) {
+      const useLight = item.kind === "crystal" && crystalLights++ < 1;
+      addCaveForm(scene, root, pool, item, materials, useLight);
+    }
     else if (item.kind === "flowers") {
       const count = lightweight ? 3 : 7;
       for (let index = 0; index < count; index += 1) {

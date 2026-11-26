@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-26",
+  "status": "candidate-awaiting-visual-review",
+  "comparisonSourceCommit": "65fdf08",
+  "presetVersion": 2,
+  "artifacts": [
+    {
+      "page": "index.html",
+      "contentId": "417a53ff8fe4cd0c",
+      "htmlBytes": 7532873,
+      "sha256": "9305968f40476c2e20180e98482d7a13c16c64f04d3eb6fd992ac4d200cbcfce"
+    },
+    {
+      "page": "maps.html",
+      "contentId": "3ba9ab2e122d14e0",
+      "htmlBytes": 7532872,
+      "sha256": "67856c49f2a86e2c9d7b8638c1ee8c96123b6e4bae7c554fa4317051e4e9d920"
+    },
+    {
+      "page": "characters.html",
+      "contentId": "4a4428d81148ed8f",
+      "htmlBytes": 7532878,
+      "sha256": "641e0700f570c3b473e5ad0a35ee3ba009e8fb1a72c841c59f1ffb7328f7318b"
+    }
+  ],
+  "implementedChanges": [
+    "Joined path face winding matches Babylon ground orientation.",
+    "Town building/ruin footing centers and stair tops meet solid terrain.",
+    "Per-map camera framing remains unchanged from preset version2.",
+    "Irregular paving, grass and raw-rock materials; varied architectural colors and visible details.",
+    "Original alpha-tested leaf cluster cards replace dominant spherical crowns.",
+    "Cave wall/arch continuity, attached hanging forms, persistent warm/cool local light.",
+    "Completed benchmark capture is discarded after reporting or invalidation to prevent stale report regeneration."
+  ],
+  "verification": {
+    "typecheck": "passed",
+    "hd2dTests": 10,
+    "infrastructureTests": 11,
+    "existingGameTests": 42,
+    "newPngReview": "pending: CUA cgWindowNotFound",
+    "newPerformanceRuns": "pending: browser unavailable; do not reuse iteration1 measurements"
+  },
+  "pendingCases": [
+    "town-standard-landscape",
+    "forest-standard-landscape",
+    "cave-standard-landscape",
+    "town-light-portrait",
+    "forest-light-portrait",
+    "cave-light-portrait"
+  ],
+  "note": "No visual scores or performance improvement claims have been assigned to this candidate without runtime capture."
+}

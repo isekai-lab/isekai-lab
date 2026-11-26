@@ -50,6 +50,32 @@
         "Replace dominant rounded crowns with layered original alpha-cutout leaf clusters and irregular silhouettes.",
         "Frame the walk band with coherent vegetation and improve floor/shore material transitions."
       ]
+    },
+    "cave": {
+      "image": "cave-v2-r1-landscape.png",
+      "contentId": "0c8a6fe810762d7d",
+      "presetVersion": 2,
+      "scores": {
+        "composition": 1,
+        "pathReadability": 0,
+        "materialPixels": 1,
+        "contactLighting": 1,
+        "identity": 2
+      },
+      "acceptedAsFinal": false,
+      "observations": [
+        "Dedicated rock/crystal palette distinguishes cave from other scenes.",
+        "Joined soil path is absent in the actual render.",
+        "Large isolated pointed rock mounds and floating stalactites do not establish a connected cave interior.",
+        "Torch influence is weak and repeated floor patterns dominate the dark scene."
+      ],
+      "next": [
+        "Fix path winding in shared geometry.",
+        "Connect rock walls/ceiling frame and attach hanging forms.",
+        "Use raw-rock strata materials and stronger local warm/cool light to guide the walking band."
+      ]
     }
-  }
+  },
+  "comparisonSourceCommit": "65fdf08",
+  "decision": "Keep as documented iteration; not deployed. All numeric frame-budget smoke checks passed on this desktop, but visual gates failed."
 }
