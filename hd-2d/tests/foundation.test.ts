@@ -10,7 +10,7 @@ import { normalizeSettings } from "../src/common/settings.ts";
 import { createWalkCourse } from "../src/fixtures/walk-course.ts";
 import { bridgeSpansWaterway, mapHasRequiredStructure, maps, seeded, solidTerrainHeightAt } from "../src/maps/definitions.ts";
 import { createMapWalkSurface } from "../src/maps/walk.ts";
-import { joinedPathIndices } from "../src/maps/world.ts";
+import { joinedPathIndices, pathSurfaceHeightAt } from "../src/maps/world.ts";
 
 const root = new URL("..", import.meta.url).pathname;
 const build = (...args: string[]) => execFileSync(process.execPath, ["scripts/build.mjs", ...args], { cwd: root, encoding: "utf8" });
@@ -79,11 +79,23 @@ test("solid buildings and stair tops meet their declared terrain", () => {
       assert.equal(solidTerrainHeightAt(map, building.x, building.z), building.height ?? 0, `${map.id} ${building.kind} footing`);
     }
     for (const stair of map.stairs) {
-      const beyondTop = stair.run / 2 + .08;
-      const x = stair.x + Math.sin(stair.rotation) * beyondTop;
-      const z = stair.z + Math.cos(stair.rotation) * beyondTop;
-      assert.equal(solidTerrainHeightAt(map, x, z), stair.rise, `${map.id} stair top joins raised terrain`);
+      const outside = stair.run / 2 + .08;
+      const baseX = stair.x - Math.sin(stair.rotation) * outside;
+      const baseZ = stair.z - Math.cos(stair.rotation) * outside;
+      const topX = stair.x + Math.sin(stair.rotation) * outside;
+      const topZ = stair.z + Math.cos(stair.rotation) * outside;
+      assert.equal(solidTerrainHeightAt(map, baseX, baseZ), 0, `${map.id} stair base remains outside raised terrain`);
+      assert.equal(solidTerrainHeightAt(map, topX, topZ), stair.rise, `${map.id} stair top joins raised terrain`);
     }
+  }
+});
+
+test("raised forest route climbs the visible stair and remains on the terrace", () => {
+  const forest = maps.forest;
+  assert.equal(pathSurfaceHeightAt(forest, -4.2, .7), 0, "approach is on lower terrain");
+  assert.equal(pathSurfaceHeightAt(forest, -4.2, 1.55), .375, "route samples a visible stair tread");
+  for (const point of forest.paths[2].points.slice(2)) {
+    assert.equal(pathSurfaceHeightAt(forest, point.x, point.z), .5, `upper route at ${point.x},${point.z}`);
   }
 });
 

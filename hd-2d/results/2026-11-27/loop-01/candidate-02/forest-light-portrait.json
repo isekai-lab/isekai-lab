@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "mapId": "forest",
+    "preset": "forest-light-portrait",
+    "presetVersion": 2,
+    "schemaVersion": 1,
+    "contentId": "8d4c2320406df1a9",
+    "buildId": "8d4c2320406df1a9",
+    "htmlBytes": 7536561
+  },
+  "viewport": {
+    "css": [
+      393,
+      852
+    ],
+    "render": [
+      393,
+      852
+    ],
+    "dpr": 1,
+    "quality": "light"
+  },
+  "settings": {
+    "mapId": "forest",
+    "zoom": 1,
+    "yaw": 0,
+    "dusk": false,
+    "lightweight": true,
+    "shadows": true,
+    "effects": true,
+    "paused": true
+  },
+  "camera": {
+    "alpha": -1.16,
+    "beta": 1.08,
+    "target": [
+      -0.8,
+      1,
+      0.4
+    ],
+    "ortho": [
+      -7.5,
+      7.5,
+      16.259541984732824,
+      -16.259541984732824
+    ]
+  },
+  "time": {
+    "animation": "paused-static",
+    "seconds": 0
+  },
+  "sampleCount": 85,
+  "frameIntervalMs": {
+    "p50": 87.59999999403954,
+    "p95": 238.70000000298023
+  },
+  "cpuSceneRenderMs": {
+    "p50": 2.899999998509884,
+    "p95": 4
+  },
+  "drawCalls": 34,
+  "activeMeshes": 227,
+  "triangles": 52600,
+  "note": "CPU scene.render wall time and frame intervals; no GPU timing or automatic art score."
+}

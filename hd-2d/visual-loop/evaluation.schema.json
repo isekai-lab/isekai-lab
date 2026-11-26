@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "caseId", "judgments", "notes"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "caseId": { "type": "string", "minLength": 1 },
+    "judgments": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["imageLabel", "mapId", "orientation", "scores", "evidence", "blockingVisualDefects", "nextChanges", "confidence"],
+        "properties": {
+          "imageLabel": { "type": "string", "minLength": 1 },
+          "mapId": { "type": "string", "enum": ["town", "forest", "cave"] },
+          "orientation": { "type": "string", "enum": ["landscape", "portrait"] },
+          "scores": { "$ref": "#/$defs/scores" },
+          "evidence": { "$ref": "#/$defs/evidence" },
+          "blockingVisualDefects": { "type": "array", "items": { "type": "string" } },
+          "nextChanges": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "scores": {
+      "type": "object", "additionalProperties": false,
+      "required": ["compositionDepth", "materialPixels", "lightingContact", "routeReadability", "sceneIdentity"],
+      "properties": {
+        "compositionDepth": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "materialPixels": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "lightingContact": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "routeReadability": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "sceneIdentity": { "type": "integer", "minimum": 0, "maximum": 4 }
+      }
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["compositionDepth", "materialPixels", "lightingContact", "routeReadability", "sceneIdentity"],
+      "properties": {
+        "compositionDepth": { "type": "string" }, "materialPixels": { "type": "string" },
+        "lightingContact": { "type": "string" }, "routeReadability": { "type": "string" },
+        "sceneIdentity": { "type": "string" }
+      }
+    }
+  }
+}

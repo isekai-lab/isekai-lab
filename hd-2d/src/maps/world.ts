@@ -11,9 +11,9 @@ import {
 import type { Material, Node, Scene, StandardMaterial } from "@babylonjs/core";
 import type { AbstractMesh } from "@babylonjs/core";
 import type { BridgeSpec, MapDefinition, Placement, StairSpec, WalkSurface } from "../contracts/index.ts";
-import { seeded } from "./definitions.ts";
+import { seeded, solidTerrainHeightAt } from "./definitions.ts";
 import { createWorldMaterials, type WorldMaterials } from "./materials.ts";
-import { createMapWalkSurface } from "./walk.ts";
+import { bridgeHeightAt, createMapWalkSurface, stairHeightAt } from "./walk.ts";
 
 export type WorldHandle = {
   root: TransformNode;
@@ -130,6 +130,34 @@ export function joinedPathIndices(pointCount: number): number[] {
   return indices;
 }
 
+export function pathSurfaceHeightAt(definition: MapDefinition, x: number, z: number): number | undefined {
+  for (const bridge of definition.bridges) {
+    const height = bridgeHeightAt(bridge, x, z);
+    if (height !== undefined) return height;
+  }
+  for (const stair of definition.stairs) {
+    const height = stairHeightAt(stair, x, z);
+    if (height !== undefined) return height;
+  }
+  return solidTerrainHeightAt(definition, x, z);
+}
+
+function densePath(points: MapDefinition["paths"][number]["points"]): { x: number; z: number }[] {
+  const result: { x: number; z: number }[] = [];
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const from = points[index];
+    const to = points[index + 1];
+    const distance = Math.hypot(to.x - from.x, to.z - from.z);
+    const segments = Math.max(1, Math.ceil(distance / .28));
+    for (let step = 0; step < segments; step += 1) {
+      const amount = step / segments;
+      result.push({ x: from.x + (to.x - from.x) * amount, z: from.z + (to.z - from.z) * amount });
+    }
+  }
+  result.push({ ...points[points.length - 1] });
+  return result;
+}
+
 function addPath(
   scene: Scene,
   root: TransformNode,
@@ -137,24 +165,30 @@ function addPath(
   materials: WorldMaterials,
 ): void {
   for (const path of definition.paths) {
+    const points = densePath(path.points);
     const left: number[] = [];
     const right: number[] = [];
-    for (let index = 0; index < path.points.length; index += 1) {
-      const previous = path.points[Math.max(0, index - 1)];
-      const next = path.points[Math.min(path.points.length - 1, index + 1)];
+    for (let index = 0; index < points.length; index += 1) {
+      const previous = points[Math.max(0, index - 1)];
+      const next = points[Math.min(points.length - 1, index + 1)];
       const length = Math.hypot(next.x - previous.x, next.z - previous.z) || 1;
       const offsetX = (next.z - previous.z) / length * path.width / 2;
       const offsetZ = -(next.x - previous.x) / length * path.width / 2;
-      left.push(path.points[index].x + offsetX, .05, path.points[index].z + offsetZ);
-      right.push(path.points[index].x - offsetX, .05, path.points[index].z - offsetZ);
+      const leftX = points[index].x + offsetX;
+      const leftZ = points[index].z + offsetZ;
+      const rightX = points[index].x - offsetX;
+      const rightZ = points[index].z - offsetZ;
+      const centerHeight = pathSurfaceHeightAt(definition, points[index].x, points[index].z) ?? 0;
+      left.push(leftX, (pathSurfaceHeightAt(definition, leftX, leftZ) ?? centerHeight) + .055, leftZ);
+      right.push(rightX, (pathSurfaceHeightAt(definition, rightX, rightZ) ?? centerHeight) + .055, rightZ);
     }
     const positions = left.flatMap((value, index) => index % 3 === 0 ? [value, left[index + 1], left[index + 2], right[index], right[index + 1], right[index + 2]] : []);
-    const indices = joinedPathIndices(path.points.length);
+    const indices = joinedPathIndices(points.length);
     const data = new VertexData();
     data.positions = positions;
     data.indices = indices;
     data.normals = Array.from({ length: positions.length }, (_, index) => index % 3 === 1 ? 1 : 0);
-    data.uvs = Array.from({ length: path.points.length }, (_, index) => [0, index, 1, index]).flat();
+    data.uvs = Array.from({ length: points.length }, (_, index) => [0, index * .18, 1, index * .18]).flat();
     const mesh = new Mesh(`${path.material}-joined-path`, scene);
     data.applyToMesh(mesh);
     mesh.parent = root;
@@ -202,6 +236,15 @@ function addTerrain(
         const px = water.axis === "z" ? bx + side * .18 : along + jitter;
         const pz = water.axis === "z" ? along + jitter : bz + side * .18;
         pool.add("rock", "shore-stone", root, new Vector3(px, .12, pz), new Vector3(.52, .25, .4), definition.id === "cave" ? materials.caveRock : materials.moss, new Vector3(0, along, 0), false);
+      }
+    }
+  } else {
+    // A narrow masonry coping keeps the waterfront legible without changing walk surfaces.
+    for (const side of [-1, 1]) {
+      const x = water.center + side * (water.width / 2 + .18);
+      addGround(scene, root, "town-river-coping", .32, water.length, x, .12, 0, materials.masonry);
+      for (let z = -water.length / 2 + 1; z < water.length / 2; z += 2.4) {
+        pool.add("rock", "coping-cap", root, new Vector3(x, .23, z + Math.sin(z * 1.7) * .08), new Vector3(.32, .16, .46), materials.masonry, new Vector3(0, z * .23, 0), false);
       }
     }
   }
@@ -435,12 +478,95 @@ function addTree(
   for (const [x, y, angle] of [[-.42, 1.75, -.82], [.38, 2.02, .88], [.12, 2.3, .38]] as const) {
     pool.add("cylinder", "tree-branch", group, new Vector3(x, y, .03), new Vector3(.18, .82, .18), materials.wood, new Vector3(0, 0, angle));
   }
-  const cards = variant === 1
-    ? [[0, 2.35, 2.65, 2.2, 0], [0, 3.15, 2.2, 2.1, Math.PI / 2], [0, 3.85, 1.55, 1.75, .35]] as const
-    : [[-.72, 2.45, 2.25, 1.8, -.2], [.05, 2.7, 2.7, 2.15, Math.PI / 2], [.75, 2.55, 2.2, 1.75, .18], [-.2, 3.45, 2.45, 1.9, .45], [.35, 3.35, 2.25, 1.8, 2.1]] as const;
-  cards.forEach(([x, y, width, height, rotation], index) => {
-    pool.add("plane", "leaf-cluster", group, new Vector3(x, y, index % 2 ? .12 : -.08), new Vector3(width, height, 1), index % 3 ? materials.leafCard : materials.darkLeafCard, new Vector3(0, rotation, 0));
+  const crowns = variant === 1
+    ? [[0, 2.35, 1.25, .92, 1.12], [-.62, 2.72, .84, .72, .8], [.66, 2.66, .9, .76, .82], [.08, 3.3, .96, .76, .94]] as const
+    : [[-.72, 2.42, .92, .72, .82], [-.18, 2.7, 1.12, .86, 1.02], [.6, 2.5, .98, .78, .9], [.13, 3.36, 1.08, .78, .96], [-.42, 3.66, .72, .58, .7], [.76, 3.28, .7, .58, .68]] as const;
+  crowns.forEach(([x, y, width, height, depth], index) => {
+    pool.add("sphere", "foliage-crown", group, new Vector3(x, y, index % 2 ? .16 : -.12), new Vector3(width, height, depth), index % 3 === 0 ? materials.darkLeaf : materials.leaf);
   });
+  for (const [x, y, z, width, height] of [[-.92, 2.65, -.16, 1.05, .72], [.82, 2.82, .1, 1.02, .72], [.02, 3.7, .06, 1.12, .72]] as const) {
+    pool.add("plane", "leaf-silhouette", group, new Vector3(x, y, z), new Vector3(width, height, 1), materials.leafCard, new Vector3(0, item.rotation ?? 0, 0), false);
+  }
+}
+
+function addCaveWallMesh(scene: Scene, group: TransformNode, pool: PrimitivePool, materials: WorldMaterials): void {
+  type CaveWallProfile = Readonly<{
+    frontFoot: Vector3;
+    frontShelf: Vector3;
+    frontUpper: Vector3;
+    frontTop: Vector3;
+    backTop: Vector3;
+    backFoot: Vector3;
+  }>;
+  const xs = [-2.35, -1.65, -.9, -.15, .6, 1.35, 2.35];
+  const fronts = [-.62, -.78, -.7, -.88, -.68, -.82, -.6];
+  const backs = [.7, .62, .84, .68, .9, .66, .76];
+  const tops = [2.25, 2.85, 2.5, 3.18, 2.68, 3, 2.3];
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const uvs: number[] = [];
+  const addFace = (points: readonly Vector3[]) => {
+    const start = positions.length / 3;
+    for (const point of points) positions.push(point.x, point.y, point.z);
+    const width = Math.max(.1, points[points.length - 1].subtract(points[0]).length());
+    uvs.push(0, 0, 0, 1, width, 1, width, 0);
+    indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
+  };
+  const profile = (index: number): CaveWallProfile => {
+    const x = xs[index];
+    const front = fronts[index];
+    const back = backs[index];
+    return {
+      frontFoot: new Vector3(x, 0, front - .06),
+      frontShelf: new Vector3(x, .56, front - .3),
+      frontUpper: new Vector3(x, .74, front - .03),
+      frontTop: new Vector3(x, tops[index], front),
+      backTop: new Vector3(x, tops[index] - .08, back),
+      backFoot: new Vector3(x, 0, back + .04),
+    };
+  };
+  const profiles = xs.map((_, index) => profile(index));
+  for (let index = 0; index < profiles.length - 1; index += 1) {
+    const left = profiles[index];
+    const right = profiles[index + 1];
+    addFace([left.frontFoot, left.frontShelf, right.frontShelf, right.frontFoot]);
+    addFace([left.frontShelf, left.frontUpper, right.frontUpper, right.frontShelf]);
+    addFace([left.frontUpper, left.frontTop, right.frontTop, right.frontUpper]);
+    addFace([left.frontTop, left.backTop, right.backTop, right.frontTop]);
+    addFace([left.backFoot, right.backFoot, right.backTop, left.backTop]);
+    addFace([left.frontFoot, right.frontFoot, right.backFoot, left.backFoot]);
+  }
+  const addCap = (wallProfile: CaveWallProfile, reverse: boolean) => {
+    const ring = [wallProfile.frontFoot, wallProfile.frontShelf, wallProfile.frontUpper, wallProfile.frontTop, wallProfile.backTop, wallProfile.backFoot];
+    const center = ring.reduce((sum, point) => sum.add(point), Vector3.Zero()).scale(1 / ring.length);
+    for (let index = 0; index < ring.length; index += 1) {
+      const start = positions.length / 3;
+      const first = ring[index];
+      const second = ring[(index + 1) % ring.length];
+      for (const point of [center, reverse ? second : first, reverse ? first : second]) positions.push(point.x, point.y, point.z);
+      uvs.push(.5, .5, 0, 0, 1, 0);
+      indices.push(start, start + 1, start + 2);
+    }
+  };
+  addCap(profiles[0], true);
+  addCap(profiles[profiles.length - 1], false);
+  const normals: number[] = [];
+  VertexData.ComputeNormals(positions, indices, normals);
+  const data = new VertexData();
+  data.positions = positions;
+  data.indices = indices;
+  data.normals = normals;
+  data.uvs = uvs;
+  const wall = new Mesh("continuous-irregular-cave-wall", scene);
+  data.applyToMesh(wall);
+  wall.parent = group;
+  wall.material = materials.caveWall;
+  wall.receiveShadows = true;
+  wall.isPickable = false;
+  pool.casters.push(wall);
+  for (const [x, z, width, depth, rotation] of [[-1.55, -.88, .72, .5, -.18], [.35, -1.02, .9, .42, .12], [1.55, -.78, .58, .46, -.26]] as const) {
+    pool.box("wall-foot-rubble", group, new Vector3(x, .13, z), new Vector3(width, .26, depth), materials.caveWall, new Vector3(.08, rotation, .04));
+  }
 }
 
 function addCaveForm(scene: Scene, root: TransformNode, pool: PrimitivePool, item: Placement, materials: WorldMaterials, withLight: boolean): void {
@@ -451,18 +577,15 @@ function addCaveForm(scene: Scene, root: TransformNode, pool: PrimitivePool, ite
     group.parent = root;
     group.position.set(item.x, y, item.z);
     group.rotation.y = item.rotation ?? 0;
-    for (let index = -1; index <= 1; index += 1) {
-      const height = (3.2 + (index + 1) % 2 * .55) * scale;
-      pool.box("layered-cave-wall", group, new Vector3(index * 1.25 * scale, height / 2, index % 2 * .18), new Vector3(1.75 * scale, height, 2.25 * scale), materials.caveRock, new Vector3(0, .08 * index, .04 * index));
-      pool.add("rock", "wall-foot-rock", group, new Vector3(index * 1.3 * scale, .35 * scale, -1.05 * scale), new Vector3(1.25 * scale, .7 * scale, .8 * scale), materials.caveRock, new Vector3(0, index, 0));
-    }
+    group.scaling.setAll(scale);
+    addCaveWallMesh(scene, group, pool, materials);
   } else if (item.kind === "caveArch") {
     const group = new TransformNode("cave-arch", scene);
     group.parent = root;
     group.position.set(item.x, y, item.z);
     group.rotation.y = item.rotation ?? 0;
-    for (const side of [-1, 1]) pool.box("arch-pier", group, new Vector3(side * 1.35 * scale, 1.65 * scale, 0), new Vector3(.85 * scale, 3.3 * scale, 1.35 * scale), materials.caveRock);
-    pool.box("arch-lintel", group, new Vector3(0, 3.45 * scale, 0), new Vector3(3.55 * scale, .9 * scale, 1.5 * scale), materials.caveRock);
+    for (const side of [-1, 1]) pool.box("arch-pier", group, new Vector3(side * 1.35 * scale, 1.65 * scale, 0), new Vector3(.85 * scale, 3.3 * scale, 1.35 * scale), materials.caveWall);
+    pool.box("arch-lintel", group, new Vector3(0, 3.45 * scale, 0), new Vector3(3.55 * scale, .9 * scale, 1.5 * scale), materials.caveWall);
     for (const [x, height] of [[-.82, .85], [0, 1.2], [.76, .7]] as const) {
       pool.add("cone", "attached-stalactite", group, new Vector3(x * scale, (3.05 - height / 2) * scale, 0), new Vector3(.42 * scale, height * scale, .42 * scale), materials.caveRock, new Vector3(0, 0, Math.PI));
     }
@@ -615,7 +738,8 @@ export function createWorld(scene: Scene, definition: MapDefinition, lightweight
       const x = -9 + random() * 18;
       const z = -9 + random() * 18;
       if (Math.abs(x - definition.waterway.center) < 1.7 || Math.abs(x + 4) < 1.5) continue;
-      const grass = pool.add("cone", "grass-tuft", root, new Vector3(x, 0.18, z), new Vector3(0.16 + random() * 0.16, 0.36 + random() * 0.18, 0.16 + random() * 0.16), random() > 0.5 ? materials.leaf : materials.darkLeaf, Vector3.Zero(), false);
+      const terrainHeight = solidTerrainHeightAt(definition, x, z) ?? 0;
+      const grass = pool.add("cone", "grass-tuft", root, new Vector3(x, terrainHeight + 0.18, z), new Vector3(0.16 + random() * 0.16, 0.36 + random() * 0.18, 0.16 + random() * 0.16), random() > 0.5 ? materials.leaf : materials.darkLeaf, Vector3.Zero(), false);
       if (!lightweight && random() > 0.82) animated.push(grass);
     }
   }

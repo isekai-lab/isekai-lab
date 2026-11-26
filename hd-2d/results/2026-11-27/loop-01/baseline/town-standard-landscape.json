@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "mapId": "town",
+    "preset": "town-standard-landscape",
+    "presetVersion": 2,
+    "schemaVersion": 1,
+    "contentId": "3ba9ab2e122d14e0",
+    "buildId": "3ba9ab2e122d14e0",
+    "htmlBytes": 7532872
+  },
+  "viewport": {
+    "css": [
+      1280,
+      720
+    ],
+    "render": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "quality": "standard"
+  },
+  "settings": {
+    "mapId": "town",
+    "zoom": 1,
+    "yaw": 0,
+    "dusk": false,
+    "lightweight": false,
+    "shadows": true,
+    "effects": true,
+    "paused": true
+  },
+  "camera": {
+    "alpha": -1.2,
+    "beta": 1.1,
+    "target": [
+      -1.2,
+      1.25,
+      0.4
+    ],
+    "ortho": [
+      -14.933333333333334,
+      14.933333333333334,
+      8.4,
+      -8.4
+    ]
+  },
+  "time": {
+    "animation": "paused-static",
+    "seconds": 0
+  },
+  "sampleCount": 10,
+  "frameIntervalMs": {
+    "p50": 492.6000000014901,
+    "p95": 1947
+  },
+  "cpuSceneRenderMs": {
+    "p50": 4.399999998509884,
+    "p95": 5.5
+  },
+  "drawCalls": 58,
+  "activeMeshes": 362,
+  "triangles": 22832,
+  "note": "CPU scene.render wall time and frame intervals; no GPU timing or automatic art score."
+}

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "beforeCaseId": "loop-01-a",
+  "afterCaseId": "loop-01-c",
+  "scale": "ordinal model judgment mapped to 0–100; not an objective measurement",
+  "weights": {
+    "compositionDepth": 20,
+    "materialPixels": 20,
+    "lightingContact": 20,
+    "routeReadability": 20,
+    "sceneIdentity": 20
+  },
+  "cases": [
+    {
+      "mapId": "town",
+      "orientation": "landscape",
+      "before": 50,
+      "after": 50,
+      "delta": 0,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": 0,
+        "lightingContact": 0,
+        "routeReadability": 0,
+        "sceneIdentity": 0
+      },
+      "blockers": [],
+      "criterionRegressions": [],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    },
+    {
+      "mapId": "town",
+      "orientation": "portrait",
+      "before": 45,
+      "after": 40,
+      "delta": -5,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": -1,
+        "lightingContact": 0,
+        "routeReadability": 0,
+        "sceneIdentity": 0
+      },
+      "blockers": [],
+      "criterionRegressions": [
+        "materialPixels"
+      ],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    },
+    {
+      "mapId": "cave",
+      "orientation": "landscape",
+      "before": 35,
+      "after": 35,
+      "delta": 0,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": 0,
+        "lightingContact": 0,
+        "routeReadability": 0,
+        "sceneIdentity": 0
+      },
+      "blockers": [
+        "The main passage at the bridge is obscured by near-black landings and the central upright mass, making its connection toward the lit ledge hard to establish."
+      ],
+      "criterionRegressions": [],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    },
+    {
+      "mapId": "cave",
+      "orientation": "portrait",
+      "before": 30,
+      "after": 30,
+      "delta": 0,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": 0,
+        "lightingContact": 0,
+        "routeReadability": 0,
+        "sceneIdentity": 0
+      },
+      "blockers": [
+        "The route off the far end of the bridge disappears into the dark bank beside the central upright mass."
+      ],
+      "criterionRegressions": [],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    },
+    {
+      "mapId": "forest",
+      "orientation": "landscape",
+      "before": 50,
+      "after": 45,
+      "delta": -5,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": 0,
+        "lightingContact": 0,
+        "routeReadability": -1,
+        "sceneIdentity": 0
+      },
+      "blockers": [],
+      "criterionRegressions": [
+        "routeReadability"
+      ],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    },
+    {
+      "mapId": "forest",
+      "orientation": "portrait",
+      "before": 50,
+      "after": 45,
+      "delta": -5,
+      "deltas": {
+        "compositionDepth": 0,
+        "materialPixels": 0,
+        "lightingContact": 0,
+        "routeReadability": -1,
+        "sceneIdentity": 0
+      },
+      "blockers": [],
+      "criterionRegressions": [
+        "routeReadability"
+      ],
+      "beforeContentId": "3ba9ab2e122d14e0",
+      "afterContentId": "3ba9ab2e122d14e0"
+    }
+  ],
+  "meanBefore": 43.333333333333336,
+  "meanAfter": 40.833333333333336,
+  "meanDelta": -2.5,
+  "reviewRequired": true,
+  "note": "Any changed camera/viewport/preset must also be rejected by the capture review. One run per version does not estimate judge variance. Human/source review remains required."
+}

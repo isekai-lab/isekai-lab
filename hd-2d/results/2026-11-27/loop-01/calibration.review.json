@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "caseId": "loop-01-c",
+  "judgments": [
+    {
+      "imageLabel": "candidate:town:landscape:c750f3c047f7cc32:3ba9ab2e122d14e0",
+      "mapId": "town",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 2,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The low foreground cottages and raised rear houses create depth across the canal, but the broad paved foreground and exposed map perimeter leave the scene feeling like an open stage.",
+        "materialPixels": "Roof tiles, timber trim and quay masonry are distinguishable. The oversized paving pattern and evenly spaced cyan dashes in the canal dominate the finer building textures.",
+        "lightingContact": "The windows and bridge lanterns provide readable warm accents. Nearby walls and paving change little in response, and several building bases have weak contact shadows.",
+        "routeReadability": "The paved band leads toward the central crossing, but the stall narrows its apparent passage and the high left quay gives few clues about where to ascend.",
+        "sceneIdentity": "Half-timbered houses, market stalls and two canal crossings establish a waterfront settlement. Similar façades and a largely undifferentiated plaza weaken its sense of place."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Break up the foreground plaza with a low quay edge and stagger the rear terrace heights to frame the central crossing.",
+        "Move the bridge stall onto a landing, leave a clear span between the rails, and add a visible stair from the plaza to the raised left quay.",
+        "Reduce the scale of the plaza setts, vary the canal ripples along its banks, and add subtle lantern spill and contact shadows at the building bases."
+      ],
+      "confidence": 0.93
+    },
+    {
+      "imageLabel": "candidate:town:portrait:c95e77869940cade:3ba9ab2e122d14e0",
+      "mapId": "town",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 1,
+        "materialPixels": 1,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The rear roofs and paired crossings supply depth cues, but the town sits in a diagonal middle band between large blank areas above and below. The lower paving offers little foreground framing.",
+        "materialPixels": "Roof hues and timber bands distinguish the houses, but the central and right plaster walls and quay faces resolve into dense stipple at this scale. The canal keeps a prominent dashed pattern.",
+        "lightingContact": "The bridge lanterns and house windows remain legible, while the central landing and adjoining walls show little local warm spill or base shading.",
+        "routeReadability": "The cobbled strip leads to the lantern-marked crossing. The stall crowds the bridge deck visually, and the approach on the right has little separation from the adjacent paving.",
+        "sceneIdentity": "Lit houses, a market stall and two bridges convey a small canal town. The broad uniform paving and repeated façades leave the crossing without a distinctive destination."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Reframe around the central crossing and rear roofs, using a foreground quay edge to fill the lower frame and reducing the blank space above.",
+        "Simplify the plaster and masonry textures into larger pixel clusters, and vary the canal surface with quieter reflections near the banks.",
+        "Place the stall beside the crossing and use matching curb edges to trace both landings. Let the bridge lanterns light the first few stones at each end."
+      ],
+      "confidence": 0.91
+    },
+    {
+      "imageLabel": "candidate:cave:landscape:0bbcc67ff92d7bdb:3ba9ab2e122d14e0",
+      "mapId": "cave",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 1,
+        "lightingContact": 1,
+        "routeReadability": 1,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The foreground stream, middle bridge and rear ledge create several planes. The central upright mass interrupts the view into the chamber, and the rear silhouettes repeat the same rectangular profile.",
+        "materialPixels": "The left lit ledge reads as regular masonry and the foreground floor repeats broad rectangular marks. The sharp blue crystals provide material contrast, while visible wall faces show little geological layering.",
+        "lightingContact": "The amber lantern and cyan water reflection establish warm and cool accents. The rear wall bases, central upright mass and bridge landings are so dark that adjacent forms merge.",
+        "routeReadability": "The wooden bridge is visible, but its far landing is difficult to follow past the central upright mass toward the lit ledge. The intervening bank and stair edges barely separate from the floor.",
+        "sceneIdentity": "Crystals, dark water and the sheltered amber light suggest a mineral cavern, but the enclosing walls still read as stacked rectangular construction."
+      },
+      "blockingVisualDefects": [
+        "The main passage at the bridge is obscured by near-black landings and the central upright mass, making its connection toward the lit ledge hard to establish."
+      ],
+      "nextChanges": [
+        "Light both bridge landings and reveal a continuous dry bank toward the lit ledge. Shift or narrow the central mass so the stair foot is visible from the crossing.",
+        "Break the rear blocks into connected, uneven rock strata with overhangs. Replace the rectangular floor marks with irregular sediment and fractured stone near the waterline.",
+        "Extend controlled amber spill down the left ledge and add faint cool bounce at the rear wall bases to recover the chamber silhouette."
+      ],
+      "confidence": 0.91
+    },
+    {
+      "imageLabel": "candidate:cave:portrait:ababf79b1a14b43f:3ba9ab2e122d14e0",
+      "mapId": "cave",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 1,
+        "materialPixels": 1,
+        "lightingContact": 1,
+        "routeReadability": 1,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The near riverbank, central upright mass and stepped rear wall suggest depth, but the main forms bunch in the middle of the frame. Large dark margins above and below contribute little to the sense of enclosure.",
+        "materialPixels": "The filtered wall highlights reveal repeated block textures. The blue crystals stand out against the broad floor pattern, while the darker faces have too little visible variation to convey rock.",
+        "lightingContact": "The blue reflection beneath the central opening and the amber lantern at the left edge form isolated accents. The bridge ends and bases of the central and rear masses merge into darkness.",
+        "routeReadability": "The right-hand bridge and a fragment of steps at left are visible, but dark bank edges and the upright mass obscure where the crossing leads.",
+        "sceneIdentity": "The stream and blue crystal cluster establish a mineral cave motif. The tall rectangular face at center and evenly stepped rear wall give the chamber a constructed appearance."
+      },
+      "blockingVisualDefects": [
+        "The route off the far end of the bridge disappears into the dark bank beside the central upright mass."
+      ],
+      "nextChanges": [
+        "Center the portrait framing on the bridge and its destination, using an overhead rock silhouette to give the upper frame a visible ceiling.",
+        "Lift the values at the two bridge ends and carry an edge highlight along the bank to the steps.",
+        "Sculpt the upright mass and rear wall into linked layers with broken overhangs, and carry faint cyan bounce onto the nearest rock faces."
+      ],
+      "confidence": 0.91
+    },
+    {
+      "imageLabel": "candidate:forest:landscape:d4c03a310a90a651:3ba9ab2e122d14e0",
+      "mapId": "forest",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 1,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "Foreground trunks, the middle bridge and the rear ruin shelf establish planes. Evenly spaced crowns and exposed ground between the trees leave the canopy layers sparse.",
+        "materialPixels": "Dark planar crowns, regularly banded trunks and repeated rectangular grass marks dominate the view. The stream is a straight strip with evenly spaced cyan dashes.",
+        "lightingContact": "Tree shadows fall consistently across the clearing, grounding several trunks. Foliage faces stay uniformly dark, and the foot of the rear ruin wall has little local shading.",
+        "routeReadability": "The tan trail and wooden bridge are distinguishable from grass and water. The trail behind the junction loses its edge against the raised ruin shelf, leaving its access unclear.",
+        "sceneIdentity": "The stream crossing and stone remnants suggest a woodland ruin. Repeated trees and the bare rectangular shelf leave the landmark generic."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Group trees at uneven intervals and vary their crown silhouettes, adding low understory along the stream and behind the ruin.",
+        "Shape a gateway or broken stair into the ruin shelf where the dirt branch meets it, with an unbroken trail edge through the junction.",
+        "Replace the rectangular grass marks and regular water dashes with patchy ground cover, irregular bank stones and ripples that vary around them."
+      ],
+      "confidence": 0.93
+    },
+    {
+      "imageLabel": "candidate:forest:portrait:69ed2e241259d015:3ba9ab2e122d14e0",
+      "mapId": "forest",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 1,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The diagonal stream leads from the lower foreground through the bridge to the rear ruin shelf. The flat green area above the map edge removes much of the background enclosure.",
+        "materialPixels": "The ruin wall and tree crowns break into dense speckle at portrait scale. Broad repeated grass rectangles and repeated cyan dash bands still dominate the ground and water.",
+        "lightingContact": "The middle trees cast consistent directional shadows across the path and clearing. Their crowns remain dark, and the raised wall receives nearly uniform illumination.",
+        "routeReadability": "The bridge and central tan junction read at a glance. The upper branch loses its edge beside the shelf, and the right bend partly disappears behind a foreground crown.",
+        "sceneIdentity": "The creek, bridge and isolated mossy ruin suggest a woodland crossing. Similar tree silhouettes and sparse understory leave the site with few distinctive features."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Bring a staggered background tree line into the blank upper frame while keeping foreground crowns clear of the bridge approaches.",
+        "Give the ruin shelf a visible entry aligned with the upper branch and reveal the trail edge at the right bend.",
+        "Use larger pixel clusters for foliage and mossy masonry, and replace repeated river dashes with irregular highlights along the banks."
+      ],
+      "confidence": 0.91
+    }
+  ],
+  "notes": [
+    "These ordinal scores reflect one independent visual review and carry subjective uncertainty.",
+    "The cave reference anchored rock strata and warm and cool lighting. Cave route scores reflect the visible crossings and approaches in the candidates."
+  ]
+}

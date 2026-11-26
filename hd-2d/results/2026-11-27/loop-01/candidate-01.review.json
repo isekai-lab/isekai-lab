@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "caseId": "loop-01-b",
+  "judgments": [
+    {
+      "imageLabel": "candidate:town:landscape:c750f3c047f7cc32:82d129a24ec02e17",
+      "mapId": "town",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 2,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The upper house terraces and lower canal crossing create distinct levels, but the broad paved foreground and exposed rear slab edge make them read as a single stage.",
+        "materialPixels": "Roof courses, timber braces and quay faces are distinct. The same high-contrast paving dominates the foreground and the rear perimeter.",
+        "lightingContact": "Warm windows and bridge lamps establish a hierarchy against the cool water, but the pavement around their bases shows little local light or contact shadow.",
+        "routeReadability": "The fine-paved lane leads toward the near crossing. The long retaining wall below the left and middle houses leaves access from the lane to their doors unclear.",
+        "sceneIdentity": "Awnings, crates and lit houses suggest an inhabited canal town, but the broad paved slab has few edges that function visibly as quays."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Cut visible steps into the retaining wall and continue the finer paving from the near bridge landing to a house entrance.",
+        "Break up the foreground apron with a lower quay and vary the masonry at coping stones, corners and waterlines.",
+        "Add small pools of lamplight at the crossing and tighter contact shadows under crates and stall posts."
+      ],
+      "confidence": 0.94
+    },
+    {
+      "imageLabel": "candidate:town:portrait:c95e77869940cade:82d129a24ec02e17",
+      "mapId": "town",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 1,
+        "materialPixels": 2,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The two crossings and stepped house platforms give some depth, but the town sits in a diagonal band between large blank areas and the foreground paving ends at a hard slab edge.",
+        "materialPixels": "Shingle rows and masonry remain distinguishable. Dense dither on the green roof and quay faces competes with their larger shapes.",
+        "lightingContact": "Window faces and crossing lamps are readable warm accents against the cool stone. The bridge lamps have little visible spill onto the deck.",
+        "routeReadability": "The near crossing and approach paving are visible together. The retaining wall beneath the middle house gives few cues for how to reach its doorstep.",
+        "sceneIdentity": "The canal, warm windows and striped stalls sell a small waterfront settlement, while the similar gables and broad stone apron give it few distinctive landmarks."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Reframe around the near crossing and the middle house, using a close quay edge to anchor the bottom of the portrait.",
+        "Make a stair and landing below the middle house visible from the crossing.",
+        "Reduce the fine stipple on quay faces and use larger coping and mortar clusters that hold up at portrait scale."
+      ],
+      "confidence": 0.93
+    },
+    {
+      "imageLabel": "candidate:cave:landscape:0bbcc67ff92d7bdb:82d129a24ec02e17",
+      "mapId": "cave",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 1,
+        "lightingContact": 1,
+        "routeReadability": 2,
+        "sceneIdentity": 1
+      },
+      "evidence": {
+        "compositionDepth": "The stream spans the foreground, with a raised shelf at left and a rear wall beyond it. Repeated pointed rock silhouettes and the exposed slab perimeter weaken the sense of enclosure.",
+        "materialPixels": "Blue crystal facets and the wood bridge are distinct. The rock wall is dominated by near-uniform dark facets, and the floor repeats a conspicuous rectangular stamp.",
+        "lightingContact": "Amber lamps and blue crystals establish warm and cool accents, but even the large planes of the rear wall and arch merge into near-black.",
+        "routeReadability": "The central brown strip links the stair foot and bridge approach. On the far side, the brown path fades into the patterned floor before a destination is clear.",
+        "sceneIdentity": "Crystals, water and lamps establish the cave theme, but rows of similar pointed forms and block bases dominate the perimeter."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Join the perimeter shapes into continuous rock masses with broad shelves, irregular fractures and varied heights.",
+        "Use cool reflected light to reveal the arch and broad rock planes, with tighter amber spill at the stair and bridge approaches.",
+        "Break up the floor stamps with irregular sediment patches and give the far bridge landing a continuous visible path edge."
+      ],
+      "confidence": 0.91
+    },
+    {
+      "imageLabel": "candidate:cave:portrait:ababf79b1a14b43f:82d129a24ec02e17",
+      "mapId": "cave",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 1,
+        "materialPixels": 1,
+        "lightingContact": 1,
+        "routeReadability": 2,
+        "sceneIdentity": 1
+      },
+      "evidence": {
+        "compositionDepth": "The stair, bridge and rear arch suggest separate planes, but the playable area sits in a narrow diagonal band with broad dark voids above and below.",
+        "materialPixels": "Crystal faces read as mineral facets. The dark, stippled rock silhouettes show little strata, and the foreground is covered by the same rectangular floor motif.",
+        "lightingContact": "A cyan patch is visible in the stream and the near lamp face reads clearly, but the adjacent rock bases and rear arch are difficult to separate.",
+        "routeReadability": "The central lamp marks the strip between the visible stair and the bridge, but the opposite landing blends into the dark bank.",
+        "sceneIdentity": "The blue mineral cluster and amber lights convey a cave theme. The evenly pointed perimeter has little visible continuity as an enclosing rock wall."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Center the portrait on the stair-to-bridge approach and use a close rock ledge to frame the lower edge while keeping the crossing open.",
+        "Connect the rear silhouettes with visible strata and give the arch and rear wall a low level of cool fill.",
+        "Add a lit landing or a defined stone bank edge where the bridge meets the opposite path."
+      ],
+      "confidence": 0.92
+    },
+    {
+      "imageLabel": "candidate:forest:landscape:d4c03a310a90a651:82d129a24ec02e17",
+      "mapId": "forest",
+      "orientation": "landscape",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 2,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "Trees overlap the stream in the foreground and the raised wall terrace anchors the middle distance. Wide gaps between similar trees expose the flat rear edge.",
+        "materialPixels": "Bark, bridge planks and wall masonry are separable, but repeated grass marks and similarly clustered crowns set a uniform texture across the scene.",
+        "lightingContact": "Trunk shadows extend in a consistent direction and ground the trees. The raised terrace and wall receive nearly the same diffuse light as surrounding flats.",
+        "routeReadability": "The orange-brown trail is easy to follow across the bridge. Its upper branch disappears at the raised wall terrace edge without a visible transition.",
+        "sceneIdentity": "The stream, trees and ruin fragments establish a woodland crossing, but the isolated walls and evenly open understory give little sense of a specific place."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Give the terrace branch a visible stair or ramp and use stones or worn trail edges to connect it to the bridge junction.",
+        "Group varied trees and understory plants around the rear edge and river bends while keeping both bridge landings visible.",
+        "Build the terrace wall into a recognizable ruin with a return wall and a visibly recessed opening."
+      ],
+      "confidence": 0.94
+    },
+    {
+      "imageLabel": "candidate:forest:portrait:69ed2e241259d015:82d129a24ec02e17",
+      "mapId": "forest",
+      "orientation": "portrait",
+      "scores": {
+        "compositionDepth": 2,
+        "materialPixels": 2,
+        "lightingContact": 2,
+        "routeReadability": 2,
+        "sceneIdentity": 2
+      },
+      "evidence": {
+        "compositionDepth": "The diagonal river draws the eye past foreground trunks and the central crossing toward the raised wall terrace. Blank space beyond the upper ground edge breaks that progression.",
+        "materialPixels": "Bridge boards, dark canopy clusters and the wall face remain distinct. Dense stipple on the ruin and terrace weakens the separation between masonry and turf.",
+        "lightingContact": "Tree shadows remain readable on the open banks. The crossing and path junction have similar values to their surroundings, so lighting gives them little emphasis.",
+        "routeReadability": "The bridge and east-bank bend both read in the crop, though overhanging foliage partly crowds the left approach and the uphill branch meets a hard terrace edge.",
+        "sceneIdentity": "The composition suggests a forest ruin by a stream, but the isolated wall and repeated crown shapes leave the ruin without a strong silhouette."
+      },
+      "blockingVisualDefects": [],
+      "nextChanges": [
+        "Fill the exposed upper edge with overlapping woodland silhouettes and keep the river diagonal as the primary line through the frame.",
+        "Trim the foreground foliage along the left landing and show a ramp or stair where the branch meets the terrace.",
+        "Give the ruin a distinct outline with a broken return wall, larger masonry courses and irregular moss patches."
+      ],
+      "confidence": 0.92
+    }
+  ],
+  "notes": [
+    "These are subjective judgments of the supplied candidate frames. Portrait composition scores reflect visible framing within each image.",
+    "The cave reference informed rock and lighting judgments. Cave route scores use the visible stairs, path and bridge in each candidate."
+  ]
+}

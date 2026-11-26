@@ -43,6 +43,8 @@ Babylon.jsで森・街・洞窟の3D背景を比較する実験室です。共�
 
 見た目の評価仕様は[計画書のベンチマーク](../docs/hd2d-experiment-plan-2026-11.md#12-森街洞窟の反復改善ベンチマーク)にあります。変更前後を同じ条件で保存し、共通処理の変更では3マップと縦画面を確認します。画像と計測の記録は`results/`へ置きます。古い版のライブFPS表示を、計測結果として扱わないでください。
 
+参考画像からの計画→背景実装→独立したCodexプロセスによる採点の手順とコマンドは[背景の改善ループ](visual-loop/README.md)にあります。5項目の基準を固定し、3マップ×横／縦の画像と撮影条件のハッシュで比較します。
+
 ## ビルドと非公開デプロイ
 
 リポジトリのルートで実行します。
@@ -65,5 +67,7 @@ npm run cf:with-env -- npm run cf:deploy:private
 `cf:check`は両プロジェクトのビルドと検証、Cloudflare配布用HTMLの集約を行います。`cf:deploy:private`は検証後、既存のゲームとHD-2D実験を一緒に更新します。認証情報とTerraformの準備は[CloudflareのREADME](../infra/cloudflare/README.md)を参照してください。
 
 配信先は既存の本人専用環境の[/hd-2d/](https://tensei-private-games.tensei-lab.workers.dev/hd-2d/)です。登録したサークル用メールに届くワンタイムコードでログインします。背景は同じURL配下の`maps.html`、人物は`characters.html`です。配信は1担当が両方の変更を取りまとめて行い、別worktreeからそれぞれ本番を上書きしません。プレビューURLは無効にし、このパスにも既存のAccess認証とWorkerのJWT検証を適用します。
+
+背景の自律改善中にpass／GPGが再ロックした場合は、解除を繰り返し依頼せず、ローカルで撮影・評価・改善・検証・コミットまで進め、未配信の状態を結果に記録します。
 
 ビルド後は`hd-2d/dist/index.html`をPCのブラウザで直接開いて実験できます。スマホでは上記Cloudflare URLを利用します。WebGLに対応したブラウザが必要です。将来追加する実験も、このディレクトリの`dist/`直下へ自己完結したHTMLとして出力します。

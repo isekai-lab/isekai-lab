@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "retrievedDate": "2026-11-27",
+  "usage": "Local visual criticism only; copyrighted reference bitmaps are excluded from repository and game distribution.",
+  "images": [
+    {
+      "mapId": "town",
+      "filename": "octopath-03.jpg",
+      "sourceUrl": "https://www.jp.square-enix.com/column/detail/files/OCTOPATH_03.jpg",
+      "sourcePage": "https://www.jp.square-enix.com/column/detail/58/",
+      "role": "waterfront composition/material scale",
+      "sha256": "2ec7f773ebd9815d67a6f9514ba55359ab31a656a4e7f8c7f1d549b7695d0bb9"
+    },
+    {
+      "mapId": "forest",
+      "filename": "octopath-07.jpg",
+      "sourceUrl": "https://www.jp.square-enix.com/column/detail/files/OCTOPATH_07.jpg",
+      "sourcePage": "https://www.jp.square-enix.com/column/detail/58/",
+      "role": "woodland composition/route hierarchy",
+      "sha256": "fcd909128a83fc5dfe81c0abca49fa5260750cc15bf03345ca0ae872a5b613fc"
+    },
+    {
+      "mapId": "cave",
+      "filename": "octopath-cave.jpg",
+      "sourceUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/921570/ss_f2d62d746b4733802516c7f76120246ee3e29327.1920x1080.jpg",
+      "sourcePage": "https://store.steampowered.com/app/921570/OCTOPATH_TRAVELER/",
+      "role": "cave battle background rock and lighting only",
+      "sha256": "b02a4bf9b50c2ba6483e071f4d004a746d4fd0673a87538eae03f228c6842a0a"
+    }
+  ]
+}

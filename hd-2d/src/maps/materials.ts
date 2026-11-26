@@ -5,7 +5,7 @@ export type MaterialName =
   | "grass" | "cobble" | "groundCobble" | "masonry" | "dirt" | "water" | "wood"
   | "plaster" | "roof" | "leaf" | "darkLeaf" | "glow" | "flower"
   | "plasterWarm" | "plasterRose" | "roofWarm" | "roofSlate" | "leafCard" | "darkLeafCard"
-  | "canvas" | "iron" | "caveRock" | "caveSoil" | "moss" | "crystal";
+  | "canvas" | "iron" | "caveRock" | "caveWall" | "caveSoil" | "moss" | "crystal";
 export type WorldMaterials = Record<MaterialName, StandardMaterial>;
 
 type Painter = (context: ICanvasRenderingContext, size: number) => void;
@@ -105,14 +105,23 @@ function leafCardMaterial(scene: Scene, name: "leafCard" | "darkLeafCard", color
 }
 
 export function createWorldMaterials(scene: Scene): WorldMaterials {
-  const grass = textureMaterial(scene, "grass", "#315944", (c) => {
-    c.fillStyle = "#42684a";
-    for (const [x, y, width, height] of [[4, 7, 13, 7], [25, 3, 19, 10], [48, 12, 11, 15], [8, 29, 20, 12], [36, 31, 22, 9], [2, 50, 16, 9], [25, 47, 25, 13]] as const) c.fillRect(x, y, width, height);
-    c.fillStyle = "#244438";
-    for (const [x, y] of [[14, 10], [31, 8], [53, 19], [20, 37], [43, 34], [9, 55], [39, 53]] as const) c.fillRect(x, y, 5, 3);
-  }, 5);
-  const cobble = textureMaterial(scene, "cobble", "#48565a", (c, size) => irregularPaving(c, size), 4);
-  const groundCobble = textureMaterial(scene, "groundCobble", "#48565a", (c, size) => irregularPaving(c, size), 8);
+  const grass = textureMaterial(scene, "grass", "#315642", (c, size) => {
+    const colors = ["#395f47", "#42654a", "#294d3d", "#4b684a"] as const;
+    for (let index = 0; index < 58; index += 1) {
+      const x = (index * 19 + index * index * 3) % size;
+      const y = (index * 31 + index * index) % size;
+      c.fillStyle = colors[index % colors.length];
+      c.fillRect(x, y, 2 + index % 4, 1 + (index * 3) % 3);
+      if (index % 5 === 0) c.fillRect((x + 3) % size, (y + 2) % size, 1, 4);
+    }
+    c.fillStyle = "#685b3e";
+    for (const [x, y] of [[7, 12], [29, 5], [49, 23], [18, 42], [55, 52], [36, 33]] as const) {
+      c.fillRect(x, y, 4, 1);
+      c.fillRect(x + 1, y - 1, 2, 3);
+    }
+  }, 11);
+  const cobble = textureMaterial(scene, "cobble", "#48565a", (c, size) => irregularPaving(c, size), 9);
+  const groundCobble = textureMaterial(scene, "groundCobble", "#48565a", (c, size) => irregularPaving(c, size), 16);
   const masonryMaterial = textureMaterial(scene, "masonry", "#6a7475", (c, size) => {
     masonry(c, size, "#3f4b50", "#89918d");
   }, 3);
@@ -199,7 +208,7 @@ export function createWorldMaterials(scene: Scene): WorldMaterials {
   const flower = textureMaterial(scene, "flower", "#9b5675", (c, size) => {
     c.fillStyle = "#e7b3c5";
     for (let y = 4; y < size; y += 12) for (let x = 4; x < size; x += 12) c.fillRect(x, y, 5, 5);
-  }, 4);
+  }, 9);
   const canvas = textureMaterial(scene, "canvas", "#a85843", (c, size) => {
     c.fillStyle = "#e0b66b";
     for (let x = 0; x < size; x += 16) c.fillRect(x, 0, 8, size);
@@ -208,20 +217,31 @@ export function createWorldMaterials(scene: Scene): WorldMaterials {
     c.fillStyle = "#56636a";
     for (let y = 5; y < size; y += 14) c.fillRect(0, y, size, 2);
   }, 2);
-  const caveRock = textureMaterial(scene, "caveRock", "#38404b", (c) => {
-    c.fillStyle = "#4b5260";
-    for (const [x, y, width, height] of [[2, 6, 22, 11], [27, 3, 31, 14], [8, 24, 34, 13], [45, 22, 16, 20], [1, 44, 25, 15], [29, 42, 31, 17]] as const) c.fillRect(x, y, width, height);
-    c.fillStyle = "#626674";
-    for (const [x, y, width] of [[8, 9, 12], [34, 7, 18], [15, 28, 20], [48, 27, 9], [6, 49, 15], [35, 47, 18]] as const) c.fillRect(x, y, width, 3);
-    c.fillStyle = "#242b37";
-    c.fillRect(22, 17, 5, 8); c.fillRect(42, 35, 6, 9); c.fillRect(24, 55, 5, 7);
-  }, 4);
-  const caveSoil = textureMaterial(scene, "caveSoil", "#4b3d42", (c, size) => {
+  const caveRock = textureMaterial(scene, "caveRock", "#46505c", (c) => {
+    c.fillStyle = "#596370";
+    for (const [x, y, width, height] of [[2, 6, 16, 8], [22, 3, 20, 11], [45, 8, 15, 9], [9, 21, 20, 10], [32, 19, 26, 13], [2, 39, 17, 12], [23, 36, 19, 9], [45, 45, 15, 13]] as const) c.fillRect(x, y, width, height);
+    c.fillStyle = "#78808a";
+    for (const [x, y, width] of [[7, 9, 8], [27, 7, 12], [48, 11, 8], [14, 25, 12], [38, 23, 13], [6, 45, 9], [27, 40, 11], [48, 50, 8]] as const) c.fillRect(x, y, width, 2);
+    c.fillStyle = "#303946";
+    for (const [x, y] of [[19, 14], [42, 16], [28, 31], [18, 50], [41, 42]] as const) c.fillRect(x, y, 4, 5);
+  }, 7);
+  const caveWall = textureMaterial(scene, "caveWall", "#505b68", (c, size) => {
+    c.fillStyle = "#626d79";
+    for (let y = 7; y < size; y += 13) {
+      c.fillRect(0, y, size, 2);
+      for (let x = (y * 3) % 17; x < size; x += 21) c.fillRect(x, y - 3, 9, 3);
+    }
+    c.fillStyle = "#394452";
+    for (const [x, y, width] of [[3, 18, 13], [24, 31, 18], [44, 9, 14], [48, 48, 11], [10, 55, 17]] as const) c.fillRect(x, y, width, 3);
+    c.fillStyle = "#7a8490";
+    for (const [x, y] of [[8, 8], [34, 20], [18, 38], [49, 29]] as const) c.fillRect(x, y, 7, 2);
+  }, 3);
+  const caveSoil = textureMaterial(scene, "caveSoil", "#5d5052", (c, size) => {
     c.fillStyle = "#6d554d";
     for (let y = 4; y < size; y += 11) c.fillRect((y * 7) % size, y, 7, 2);
     c.fillStyle = "#2d303a";
     for (let x = 7; x < size; x += 17) c.fillRect(x, (x * 3) % size, 3, 4);
-  }, 5);
+  }, 10);
   const moss = textureMaterial(scene, "moss", "#28463b", leafPainter("#4f7051", "#18342e"), 5);
   const crystal = textureMaterial(scene, "crystal", "#577ca2", (c) => {
     c.fillStyle = "#a7dded"; c.fillRect(21, 4, 10, 48); c.fillRect(8, 22, 12, 31); c.fillRect(40, 15, 11, 38);
@@ -229,5 +249,5 @@ export function createWorldMaterials(scene: Scene): WorldMaterials {
   }, 1);
   crystal.emissiveColor = Color3.FromHexString("#3b7195");
 
-  return { grass, cobble, groundCobble, masonry: masonryMaterial, dirt, water, wood, plaster, roof, plasterWarm, plasterRose, roofWarm, roofSlate, leaf, darkLeaf, leafCard, darkLeafCard, glow, flower, canvas, iron, caveRock, caveSoil, moss, crystal };
+  return { grass, cobble, groundCobble, masonry: masonryMaterial, dirt, water, wood, plaster, roof, plasterWarm, plasterRose, roofWarm, roofSlate, leaf, darkLeaf, leafCard, darkLeafCard, glow, flower, canvas, iron, caveRock, caveWall, caveSoil, moss, crystal };
 }

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "captureProtocolVersion": 1,
+  "startedAt": "2026-11-26T15:59:36.489Z",
+  "executionStatus": "success",
+  "url": "http://127.0.0.1:4310/maps.html",
+  "browser": {
+    "executable": "Google Chrome",
+    "headless": true,
+    "profile": "temporary separate profile",
+    "version": "158.0.8127.88",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)"
+  },
+  "measurement": "Headless Chrome software/CPU scene.render wall-time and frame intervals only; not real-phone, GPU, or device performance.",
+  "imageProtocol": "image is a screenshot of the visible #world canvas after static benchmark completion, with sibling UI overlays temporarily visibility-hidden; rawImage is the capture-png RenderTarget export retained as a diagnostic because it can omit post-processing.",
+  "captures": [
+    {
+      "mapId": "town",
+      "orientation": "landscape",
+      "quality": "standard",
+      "viewport": [
+        1280,
+        720
+      ],
+      "dpr": 1,
+      "image": "town-standard-landscape.png",
+      "report": "town-standard-landscape.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T15:56:24.649Z"
+    },
+    {
+      "mapId": "town",
+      "orientation": "portrait",
+      "quality": "light",
+      "viewport": [
+        393,
+        852
+      ],
+      "dpr": 1,
+      "image": "town-light-portrait.png",
+      "report": "town-light-portrait.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T15:56:49.305Z"
+    },
+    {
+      "mapId": "forest",
+      "orientation": "landscape",
+      "quality": "standard",
+      "viewport": [
+        1280,
+        720
+      ],
+      "dpr": 1,
+      "image": "forest-standard-landscape.png",
+      "report": "forest-standard-landscape.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T15:58:16.488Z"
+    },
+    {
+      "mapId": "forest",
+      "orientation": "portrait",
+      "quality": "light",
+      "viewport": [
+        393,
+        852
+      ],
+      "dpr": 1,
+      "image": "forest-light-portrait.png",
+      "report": "forest-light-portrait.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T15:58:45.081Z"
+    },
+    {
+      "mapId": "cave",
+      "orientation": "landscape",
+      "quality": "standard",
+      "viewport": [
+        1280,
+        720
+      ],
+      "dpr": 1,
+      "image": "cave-standard-landscape.png",
+      "report": "cave-standard-landscape.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T16:00:17.535Z"
+    },
+    {
+      "mapId": "cave",
+      "orientation": "portrait",
+      "quality": "light",
+      "viewport": [
+        393,
+        852
+      ],
+      "dpr": 1,
+      "image": "cave-light-portrait.png",
+      "report": "cave-light-portrait.json",
+      "contentId": "82d129a24ec02e17",
+      "capturedAt": "2026-11-26T16:00:53.325Z"
+    }
+  ],
+  "finishedAt": "2026-11-26T16:00:53.378Z"
+}

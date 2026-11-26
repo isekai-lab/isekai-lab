@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "mapId": "cave",
+    "preset": "cave-standard-landscape",
+    "presetVersion": 2,
+    "schemaVersion": 1,
+    "contentId": "8d4c2320406df1a9",
+    "buildId": "8d4c2320406df1a9",
+    "htmlBytes": 7536561
+  },
+  "viewport": {
+    "css": [
+      1280,
+      720
+    ],
+    "render": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "quality": "standard"
+  },
+  "settings": {
+    "mapId": "cave",
+    "zoom": 1,
+    "yaw": 0,
+    "dusk": false,
+    "lightweight": false,
+    "shadows": true,
+    "effects": true,
+    "paused": true
+  },
+  "camera": {
+    "alpha": -1.18,
+    "beta": 1.1,
+    "target": [
+      -0.4,
+      1.1,
+      0.1
+    ],
+    "ortho": [
+      -15.11111111111111,
+      15.11111111111111,
+      8.5,
+      -8.5
+    ]
+  },
+  "time": {
+    "animation": "paused-static",
+    "seconds": 0
+  },
+  "sampleCount": 23,
+  "frameIntervalMs": {
+    "p50": 396,
+    "p95": 509.69999999552965
+  },
+  "cpuSceneRenderMs": {
+    "p50": 3.399999998509884,
+    "p95": 4
+  },
+  "drawCalls": 48,
+  "activeMeshes": 117,
+  "triangles": 4840,
+  "note": "CPU scene.render wall time and frame intervals; no GPU timing or automatic art score."
+}

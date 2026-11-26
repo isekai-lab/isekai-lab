@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "caseId": "loop-01-b",
+  "executionStatus": "success",
+  "attachments": [
+    {
+      "label": "reference:waterfront composition/material scale:town",
+      "kind": "reference",
+      "mapId": "town",
+      "sha256": "2ec7f773ebd9815d67a6f9514ba55359ab31a656a4e7f8c7f1d549b7695d0bb9"
+    },
+    {
+      "label": "reference:woodland composition/route hierarchy:forest",
+      "kind": "reference",
+      "mapId": "forest",
+      "sha256": "fcd909128a83fc5dfe81c0abca49fa5260750cc15bf03345ca0ae872a5b613fc"
+    },
+    {
+      "label": "reference:cave battle background rock and lighting only:cave",
+      "kind": "reference",
+      "mapId": "cave",
+      "sha256": "b02a4bf9b50c2ba6483e071f4d004a746d4fd0673a87538eae03f228c6842a0a"
+    },
+    {
+      "label": "candidate:town:landscape:c750f3c047f7cc32:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "town",
+      "orientation": "landscape",
+      "conditionId": "c750f3c047f7cc32",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "2ed4c43430d62ca6cc948ffa0eac294e9fc3520e826350cbf5643e9554bfdff9"
+    },
+    {
+      "label": "candidate:town:portrait:c95e77869940cade:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "town",
+      "orientation": "portrait",
+      "conditionId": "c95e77869940cade",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "9abbd17123bf833aa4faba5ef915d5d2f6d2a02ab49e1d44d5b96d14f64576a3"
+    },
+    {
+      "label": "candidate:cave:landscape:0bbcc67ff92d7bdb:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "cave",
+      "orientation": "landscape",
+      "conditionId": "0bbcc67ff92d7bdb",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "6b4c51a2c8d8112d29c8fc6ca2d2a7a5aa3aa4fb0ec9b935149e866015500f8e"
+    },
+    {
+      "label": "candidate:cave:portrait:ababf79b1a14b43f:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "cave",
+      "orientation": "portrait",
+      "conditionId": "ababf79b1a14b43f",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "dbc3d2bfabb7397c575c1f39a599487880043be1164d835906c29208a1a0c64f"
+    },
+    {
+      "label": "candidate:forest:landscape:d4c03a310a90a651:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "forest",
+      "orientation": "landscape",
+      "conditionId": "d4c03a310a90a651",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "bd0e10d4c101adeef7aa7c8f6a882e46f18802d32efad01f10274c2b97ca5c0b"
+    },
+    {
+      "label": "candidate:forest:portrait:69ed2e241259d015:82d129a24ec02e17",
+      "kind": "candidate",
+      "mapId": "forest",
+      "orientation": "portrait",
+      "conditionId": "69ed2e241259d015",
+      "contentId": "82d129a24ec02e17",
+      "sha256": "9fcfdc9e8c78b2b2a7e9466e644b75daf0f4616eeeda138492568e397fa0e8ee"
+    }
+  ],
+  "rubricSha256": "68e5cbe8c4f038821ca370a63d6d0bc10e6c53a10070039ada16546914d04339",
+  "cli": {
+    "version": "codex-cli 0.171.0-alpha.13.2",
+    "args": [
+      "exec",
+      "--ignore-user-config",
+      "--ephemeral",
+      "--sandbox",
+      "read-only",
+      "--skip-git-repo-check",
+      "-C",
+      "<evidence-dir>",
+      "--json",
+      "--output-schema",
+      "evaluation.schema.json",
+      "--output-last-message",
+      "result.json",
+      "--image",
+      "reference:waterfront composition/material scale:town",
+      "--image",
+      "reference:woodland composition/route hierarchy:forest",
+      "--image",
+      "reference:cave battle background rock and lighting only:cave",
+      "--image",
+      "candidate:town:landscape:c750f3c047f7cc32:82d129a24ec02e17",
+      "--image",
+      "candidate:town:portrait:c95e77869940cade:82d129a24ec02e17",
+      "--image",
+      "candidate:cave:landscape:0bbcc67ff92d7bdb:82d129a24ec02e17",
+      "--image",
+      "candidate:cave:portrait:ababf79b1a14b43f:82d129a24ec02e17",
+      "--image",
+      "candidate:forest:landscape:d4c03a310a90a651:82d129a24ec02e17",
+      "--image",
+      "candidate:forest:portrait:69ed2e241259d015:82d129a24ec02e17",
+      "-"
+    ]
+  },
+  "audit": {
+    "toolUseDetected": false,
+    "model": "not-reported-by-cli"
+  }
+}
