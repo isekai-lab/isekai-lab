@@ -5,6 +5,12 @@
 短い異世界ゲームを単品で試しながら、記憶の葉・スキル・キャラクター・アセットを育てるプロジェクトです。
 サークル名は「転生魔法研究所」。ディレクトリ名は指定に合わせ `isekai-lab` を想定しています。
 
+## HD-2D実験
+
+3D背景と大型キャラクターの制作・描画方式を比較する実験は、独立した [`hd-2d/`](hd-2d/README.md) で進めます。商用利用を含め無料のツールに限定し、Babylon.jsの共通基盤から背景・キャラ各方式を比較する計画です。現在は計画段階で、実装・実行コマンドはまだ追加していません。
+
+担当範囲・構成・受入条件は[開発計画書](docs/hd2d-experiment-plan-2026-11.md)を参照してください。
+
 ## 最初の試作
 
 | 出力 | ゲーム | 操作 | 一回の区切り |
@@ -13,6 +19,7 @@
 | `3min-rpg/dist/game1.html` | 三分間の死に戻り「鐘の村」 | 歩く主人公を見ながら選ぶ二択 | 8場面以内、目安3分。時間制限なし |
 | `3min-rpg/dist/game2.html` | ハズレスキル研究所 | コマンド戦闘 | 3連戦、目安3分。時間制限なし |
 | `3min-rpg/dist/game3.html` | こもれび防衛線 | 移動先クリック / タッチ、攻撃自動 | 操作中の180秒、成長・休憩中は停止 |
+| `3min-rpg/dist/fullscreen-mock.html` | 全画面RPGのフィールドモック | タップ移動・会話・場所切替、下にコメント欄 | 画面構成の確認用 |
 
 ## 実行
 
@@ -49,6 +56,26 @@ npm run typecheck
 PCではHTMLを直接開けます。スマホはOSによってローカルHTMLをプレビュー表示することがあるため、同じHTMLを静的ホスティングしてブラウザから開く方法を推奨します。
 開発サーバーをLANから開く場合は `HOST=0.0.0.0 npm run dev` とし、同じLANのスマホからPCのIPアドレスを使います。
 
+## 全画面RPGのモック
+
+`npm run build` 後に `3min-rpg/dist/fullscreen-mock.html` をChromeへドラッグして開けます。プレビューサーバーでは `http://127.0.0.1:4173/fullscreen-mock.html` です。
+
+昔の2D RPGのように、地面を見下ろしながら建物やキャラクターの正面も見えるフィールドを、最初の1画面いっぱいに表示します。道・川・橋・家・木の間をタップで歩き、村人や看板を調べられます。キーボードでは矢印キー / WASDで移動、Enterで調べます。メニューから「鐘の村」「魔法研究所」「こもれび防衛線」を切り替えて画面構成を確認できます。
+
+ゲーム内の小さなHUDと操作だけをマップに重ね、感想・コメントはゲームの下へスクロールして表示します。このHTMLはフィールドの移動・会話を試す画面モックです。コメントは表示例と端末内の試し書きで、オンライン投稿には接続していません。ソースと素材の出自は [mock/README.md](3min-rpg/mock/README.md) を参照してください。
+
+Chromeでスマホのレイアウトを確認する手順（Mac）:
+
+1. モックを開き、`⌘ + Option + I` で開発者ツールを開く。
+2. 開発者ツールを開いた状態で `⌘ + Shift + M` を押す。左上のスマホ・タブレットのアイコンからも切り替えられる。
+3. 上部の「Dimensions / サイズ」で「Responsive」を選び、幅と高さを入力する。まず `390 × 844`、小さい画面は `320 × 568`、広い画面は `430 × 932` を試す。
+4. 回転ボタンで横向きも確認する。表示が収まらない場合はツールバーのズームを「Fit to window」にする。
+5. 主人公が見えるか、タップした場所へ歩けるか、コメントへ移動してゲームに戻れるか、文字やボタンが重ならないかを確認する。
+
+Windows / Linuxでは開発者ツールが `Ctrl + Shift + I`、スマホ表示切替が `Ctrl + Shift + M` です。操作の詳細は [Chrome公式のDevice Mode](https://developer.chrome.com/docs/devtools/device-mode) と [ショートカット一覧](https://developer.chrome.com/docs/devtools/shortcuts) を参照してください。
+
+Device Modeは画面サイズやタッチ操作の近似です。スマホのアドレスバーの伸縮、画面の切り欠き、ソフトキーボードの挙動は実機でも確認してください。
+
 ## 構成
 
 ```text
@@ -56,6 +83,7 @@ PCではHTMLを直接開けます。スマホはOSによってローカルHTML�
   common/
     src/       # 共通UI、記憶の葉、描画、CSS、試作一覧
     assets/    # 全作品で使う16×16ドット絵、パレット、ライセンス
+    vfx/       # 出典付きの魔法アニメーション、tsParticles用シート描画
   game1/
     src/       # 二択死に戻りの状態遷移とUI
     assets/    # 固有アセット用
@@ -65,6 +93,10 @@ PCではHTMLを直接開けます。スマホはOSによってローカルHTML�
   game3/
     src/       # 移動・敵・弾・成長のシミュレーションとUI
     assets/
+  mock/
+    src/       # 全画面RPGの画面構成、独立CSS、手続き描画
+  effects/
+    src/       # 魔法カタログのプレビュー、検索、個別JSON書き出し
   scripts/     # 単体HTMLビルド、ローカルプレビュー
   tests/       # 状態遷移、勝敗、記憶の移植の検証
   dist/        # 再生成できる配布HTML（Git追跡対象外）
@@ -81,6 +113,10 @@ PCではHTMLを直接開けます。スマホはOSによってローカルHTML�
 制作支援用の[公式MCPサーバー](https://github.com/tsparticles/tsparticles/tree/main/integrations/mcp-server)も固定バージョンで導入しています。開発依存を `npm ci --ignore-scripts` で用意し、リポジトリを作業ディレクトリとして `npm run --silent effects:mcp` を実行すると、ローカルのstdioサーバーが起動します。AIから設定診断・必要なプラグインの確認・コード生成を利用できます。MCPは制作時だけの道具で、配布ゲームには同梱しません。
 
 詳細と出自は `3min-rpg/game2/assets/README.md` と `3min-rpg/common/vendor/README.md` を参照してください。
+
+魔法の画像アニメーションは `3min-rpg/common/vfx/` に収録しています。`npm run build` 後に `3min-rpg/dist/effect-catalog.html` をブラウザで開くと、種類を選んで再生し、画像込みのエフェクトJSONを書き出せます。`npm run preview` を使う場合は `/effect-catalog.html` です。PC・スマホ向けの単体HTMLで、画像も内包し、再生に外部通信は使いません。
+
+素材は para 氏の [Animated particle effects #1](https://opengameart.org/content/animated-particle-effects-1) と [#2](https://opengameart.org/content/animated-particle-effects-2)、Mikodrak 氏の [2D Spell Effects](https://opengameart.org/content/2d-spell-effects)（いずれもCC0）から、炎・魔法陣・転移・泡・火球・雷球などを取り込んでいます。元のコマ順・色・透明背景・再生速度を保ち、tsParticles用のシート描画拡張と組み合わせて再生します。既存の戦闘への割り当ては、カタログから選んで行えます。利用方法・素材の追加手順・出典は [共通VFXのREADME](3min-rpg/common/vfx/README.md) を参照してください。
 
 ## 記憶の葉
 

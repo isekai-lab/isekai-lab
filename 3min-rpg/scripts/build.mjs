@@ -12,7 +12,9 @@ const dist = path.join(root, 'dist');
 const theme = await readFile(path.join(root, 'common/src/theme.css'), 'utf8');
 const tsParticles = await readFile(path.join(root, 'common/vendor/tsparticles-4.6.0.bundle.min.js'), 'utf8');
 const tsParticlesLicense = await readFile(path.join(root, 'common/vendor/tsparticles-4.6.0.LICENSE'), 'utf8');
-const targets = { 'index.html': 'common/src/gallery.ts', 'game1.html': 'game1/src/main.ts', 'game2.html': 'game2/src/main.ts', 'game3.html': 'game3/src/main.ts' };
+const targets = { 'index.html': 'common/src/gallery.ts', 'game1.html': 'game1/src/main.ts', 'game2.html': 'game2/src/main.ts', 'game3.html': 'game3/src/main.ts', 'fullscreen-mock.html': 'mock/src/main.ts', 'effect-catalog.html': 'effects/src/main.ts' };
+const mockTheme = await readFile(path.join(root, 'mock/src/style.css'), 'utf8');
+const catalogTheme = await readFile(path.join(root, 'effects/src/style.css'), 'utf8');
 // Tiny dependency-free packer for this prototype's named-import-only modules.
 // TypeScript erasure is performed by Node itself. Upgrade to esbuild/Vite when needed.
 async function bundle(entry) {
@@ -37,9 +39,12 @@ await mkdir(dist, { recursive: true });
 for (const [name, entry] of Object.entries(targets)) {
   const application = await bundle(entry);
   // The full bundle provides emitters; it is deliberately inlined only into game2.
-  const vendor = name === 'game2.html' ? `/*\n${tsParticlesLicense}\n*/\n${tsParticles}\n` : '';
+  const vendor = name === 'game2.html' || name === 'effect-catalog.html' ? `/*\n${tsParticlesLicense}\n*/\n${tsParticles}\n` : '';
   const js = `${vendor}/* application:start */\n${application}`.replace(/<\/script/gi, '\\x3c/script');
-  const document = `<!doctype html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#eef0e4"><title>転生魔法研究所</title><style>${theme}</style></head><body><noscript>このゲームを遊ぶにはJavaScriptを有効にしてください。</noscript><script>${js}</script></body></html>`;
+  const css = name === 'fullscreen-mock.html' ? mockTheme : `${theme}${name === 'effect-catalog.html' ? `\n${catalogTheme}` : ''}`;
+  const title = name === 'fullscreen-mock.html' ? '転生魔法研究所 | フィールド探索モック' : name === 'effect-catalog.html' ? '転生魔法研究所 | 魔法エフェクトカタログ' : '転生魔法研究所';
+  const themeColor = name === 'fullscreen-mock.html' ? '#183b2e' : '#eef0e4';
+  const document = `<!doctype html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="${themeColor}"><title>${title}</title><style>${css}</style></head><body><noscript>このゲームを遊ぶにはJavaScriptを有効にしてください。</noscript><script>${js}</script></body></html>`;
   await writeFile(path.join(dist, name), document);
   console.log(`${name.padEnd(12)} ${(Buffer.byteLength(document) / 1024).toFixed(1)} KiB · self-contained`);
 }

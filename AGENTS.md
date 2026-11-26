@@ -1,7 +1,7 @@
 # tensei-lab
 
 - サークル名: 転生魔法研究所。リポジトリの設置先は `~/git/isekai-lab`。
-- 試作は `3min-rpg/`。概要・実行方法はルート `README.md`。
+- 短編ゲームの試作は `3min-rpg/`、HD-2D実験は `hd-2d/`。概要・実行方法は各READMEとルート `README.md`。
 - 各作品はTypeScriptのES modulesで開発し、配布時は外部通信不要の単体HTMLにする。
 - 共通の見た目、葉、描画、素材は `3min-rpg/common/`。固有のルールは各 `gameN/src/`。
 - マウス・タッチ操作を主にし、スマホとPCで確認する。
