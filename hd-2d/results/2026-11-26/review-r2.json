@@ -49,5 +49,17 @@
     "forest-light-portrait",
     "cave-light-portrait"
   ],
-  "note": "No visual scores or performance improvement claims have been assigned to this candidate without runtime capture."
+  "note": "No visual scores or performance improvement claims have been assigned to this candidate without runtime capture.",
+  "sourceCommit": "eaff3c7",
+  "cloudflareDeployment": {
+    "versionId": "9e4d75e3-5486-4236-bcac-865341757bb3",
+    "pages": [
+      "/hd-2d/",
+      "/hd-2d/maps.html",
+      "/hd-2d/characters.html"
+    ],
+    "verifiedArtifactInputs": "3 HTML files match recorded SHA-256 and byte lengths",
+    "unauthenticatedAndForgedJwt": "4 paths \u00d7 2 conditions: all302 toAccess login",
+    "authenticatedBrowserReview": "pending: browser window unavailable"
+  }
 }
