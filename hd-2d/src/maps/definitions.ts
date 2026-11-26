@@ -1,4 +1,4 @@
-import type { MapDefinition, Placement } from "./contracts.ts";
+import type { MapDefinition, Placement } from "../contracts/index.ts";
 
 const place = (
   kind: Placement["kind"], x: number, z: number, height = 0, scale = 1,
@@ -54,6 +54,7 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
       place("flowers", 5.4, 3.1, 1.05, 0.9, 0, 1),
     ],
     cameraTarget: { x: 0, y: 1.2, z: 0.3 },
+    environment: { cameraBeta: 1.02, cameraYaw: -Math.PI / 4, orthoHalfHeight: 9.5 },
   },
   forest: {
     id: "forest",
@@ -100,6 +101,17 @@ export const maps: Record<MapDefinition["id"], MapDefinition> = {
       place("flowers", 4.2, 1.2, 0, 0.8, 0, 1),
     ],
     cameraTarget: { x: 0, y: 1, z: 0.2 },
+    environment: { cameraBeta: 1.02, cameraYaw: -Math.PI / 4, orthoHalfHeight: 10.2, fogDensity: .014 },
+  },
+  cave: {
+    id: "cave", name: "試験洞窟", seed: 3901, size: 16,
+    waterway: { axis: "x", center: -5, width: 1.2, length: 22 },
+    levels: [{ x: -4, z: 4, width: 6, depth: 5, height: 1, material: "stone" }],
+    paths: [{ points: [{ x: -10, z: -7 }, { x: -5, z: -3 }, { x: 0, z: 1 }, { x: 7, z: 6 }], width: 1.4, material: "dirt" }],
+    stairs: [{ x: -1, z: 1.7, rotation: 0.85, width: 1.3, run: 2.2, rise: 1, steps: 5 }],
+    bridges: [{ x: -5, z: -5, rotation: Math.PI / 2, length: 2.3, width: 1.3, deckHeight: .35, style: "wood" }],
+    placements: [place("ruin", 4, 5), place("rock", -7, 4, 0, 1.3), place("rock", 8, -5, 0, 1.2), place("lantern", -1, 1), place("stump", 5, -2)],
+    cameraTarget: { x: 0, y: 1, z: 0 }, environment: { palette: "cave", fogDensity: .018, cameraBeta: 1.04, cameraYaw: -Math.PI / 4, orthoHalfHeight: 9.5 },
   },
 };
 
@@ -126,7 +138,12 @@ export function mapHasRequiredStructure(map: MapDefinition): boolean {
       map.levels.some((level) => level.height > 0) &&
       map.stairs.some((stair) => stair.rise > 0 && stair.steps >= 3);
   }
+  if (map.id === "forest") {
+    return map.paths.some((path) => path.points.length >= 4) &&
+      map.placements.filter((item) => item.kind === "tree").length >= 8 &&
+      map.placements.some((item) => item.kind === "ruin");
+  }
   return map.paths.some((path) => path.points.length >= 4) &&
-    map.placements.filter((item) => item.kind === "tree").length >= 8 &&
+    map.stairs.some((stair) => stair.rise > 0) &&
     map.placements.some((item) => item.kind === "ruin");
 }

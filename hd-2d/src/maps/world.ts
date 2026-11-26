@@ -10,15 +10,17 @@ import {
 } from "@babylonjs/core";
 import type { Material, Node, Scene, StandardMaterial } from "@babylonjs/core";
 import type { AbstractMesh } from "@babylonjs/core";
-import type { BridgeSpec, MapDefinition, Placement, StairSpec } from "./contracts.ts";
-import { seeded } from "./maps.ts";
+import type { BridgeSpec, MapDefinition, Placement, StairSpec, WalkSurface } from "../contracts/index.ts";
+import { seeded } from "./definitions.ts";
 import { createWorldMaterials, type WorldMaterials } from "./materials.ts";
+import { createMapWalkSurface } from "./walk.ts";
 
 export type WorldHandle = {
   root: TransformNode;
   bounds: number;
   target: Vector3;
   shadowCasters: readonly AbstractMesh[];
+  walk: WalkSurface;
   update: (elapsedSeconds: number) => void;
   dispose: () => void;
 };
@@ -526,15 +528,13 @@ export function createWorld(scene: Scene, definition: MapDefinition, lightweight
     }
   }
 
-  let previousTime = 0;
+  const animatedBaseY = animated.map((mesh) => mesh.position.y);
   const update = (elapsedSeconds: number): void => {
-    const delta = Math.max(0, elapsedSeconds - previousTime);
-    previousTime = elapsedSeconds;
     const texture = waterMaterial.diffuseTexture as import("@babylonjs/core").Texture | null;
-    if (texture) texture.vOffset = (texture.vOffset + delta * 0.035) % 1;
+    if (texture) texture.vOffset = (elapsedSeconds * 0.035) % 1;
     for (let index = 0; index < animated.length; index += 1) {
       const mesh = animated[index];
-      mesh.position.y += Math.sin(elapsedSeconds * 1.4 + index * 1.7) * delta * 0.035;
+      mesh.position.y = animatedBaseY[index] + Math.sin(elapsedSeconds * 1.4 + index * 1.7) * 0.02;
       mesh.rotation.y = elapsedSeconds * 0.2 + index;
     }
   };
@@ -544,6 +544,7 @@ export function createWorld(scene: Scene, definition: MapDefinition, lightweight
     bounds: definition.id === "town" ? 13.5 : 14,
     target: new Vector3(definition.cameraTarget.x, definition.cameraTarget.y, definition.cameraTarget.z),
     shadowCasters: pool.casters,
+    walk: createMapWalkSurface(definition),
     update,
     dispose: () => {
       root.dispose(false, false);

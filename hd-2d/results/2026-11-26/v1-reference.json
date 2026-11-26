@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-26",
+  "kind": "qualitative-reference-only",
+  "sourceCommit": "dd1897f",
+  "cloudflareVersion": "560fe9ab-e021-47da-9f24-0ee8c28995ac",
+  "capture": {
+    "tool": "Chrome DevTools Capture screenshot",
+    "viewportCss": [
+      1280,
+      720
+    ],
+    "pngPixels": [
+      2560,
+      1440
+    ],
+    "devicePixelRatio": 2,
+    "quality": "standard",
+    "animationTime": "uncontrolled; not a deterministic benchmark snapshot",
+    "uiIncluded": true
+  },
+  "maps": [
+    {
+      "mapId": "town",
+      "image": "town-v1-landscape.png",
+      "observations": [
+        "Wide repeated stone floor dominates the view.",
+        "Houses use similar silhouettes and stand apart.",
+        "Canal, bridge and raised areas establish basic depth."
+      ]
+    },
+    {
+      "mapId": "forest",
+      "image": "forest-v1-landscape.png",
+      "observations": [
+        "Sparse spherical/conical crowns expose the square repeated floor.",
+        "Path segments have abrupt joins and disconnected-looking edges.",
+        "Stream, bridge and ruins provide a recognizable scene."
+      ]
+    }
+  ],
+  "performance": null,
+  "note": "Live FPS text in screenshots is not benchmark data. Cave did not exist in this reference version. Later camera/material/resolution changes mean these are qualitative reference images, not pixel-aligned or equivalent-load performance baselines."
+}

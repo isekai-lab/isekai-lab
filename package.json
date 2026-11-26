@@ -8,6 +8,7 @@
   "scripts": {
     "build": "node 3min-rpg/scripts/build.mjs",
     "hd2d:build": "node hd-2d/scripts/build.mjs",
+    "hd2d:preview": "node hd-2d/scripts/serve.mjs",
     "hd2d:typecheck": "tsc --project hd-2d/tsconfig.json",
     "hd2d:test": "node --disable-warning=ExperimentalWarning --test hd-2d/tests/*.test.ts",
     "test": "node --disable-warning=ExperimentalWarning --test 3min-rpg/tests/*.test.ts",
