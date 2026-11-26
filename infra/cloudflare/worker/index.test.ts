@@ -58,6 +58,20 @@ test("valid Cloudflare Access RS256 JWT reaches assets", { concurrency: false },
   assert.equal(result.response.headers.get("Cache-Control"), "no-store");
 });
 
+test("the protected HD-2D route rejects missing or forged Access JWTs", { concurrency: false }, async () => {
+  const valid = await signedToken();
+  let result = await run(null, valid.publicJwk, `https://${hostname}/hd-2d/`);
+  assert.equal(result.response.status, 403);
+  assert.equal(result.assetsCalls, 0);
+  const forged = await signedToken();
+  result = await run(forged.token, valid.publicJwk, `https://${hostname}/hd-2d/`);
+  assert.equal(result.response.status, 403);
+  assert.equal(result.assetsCalls, 0);
+  result = await run(valid.token, valid.publicJwk, `https://${hostname}/hd-2d/`);
+  assert.equal(result.response.status, 200);
+  assert.equal(result.assetsCalls, 1);
+});
+
 test("wrong email, audience, expiry, and a forged signature cannot reach assets", { concurrency: false }, async () => {
   const valid = await signedToken({ email: "other@example.invalid" });
   let result = await run(valid.token, valid.publicJwk);

@@ -7,7 +7,9 @@
 
 ## HD-2D実験
 
-3D背景と大型キャラクターの制作・描画方式を比較する実験は、独立した [`hd-2d/`](hd-2d/README.md) で進めます。商用利用を含め無料のツールに限定し、Babylon.jsの共通基盤から背景・キャラ各方式を比較する計画です。現在は計画段階で、実装・実行コマンドはまだ追加していません。
+3D背景と大型キャラクターの制作・描画方式を比較する実験は、独立した [`hd-2d/`](hd-2d/README.md) で進めます。商用利用を含め無料のツールに限定し、Babylon.jsの共通基盤から背景・キャラ各方式を比較する計画です。実験本体は計画段階で、Cloudflare用の配信確認ページを先に用意しています。
+
+`npm run hd2d:build`で入口をビルドし、`npm run cf:with-env -- npm run cf:deploy:private`で既存ゲームと一緒に更新します。配信先は本人専用環境の[/hd-2d/](https://tensei-private-games.tensei-lab.workers.dev/hd-2d/)です。手順は[HD-2DのREADME](hd-2d/README.md)を参照してください。
 
 担当範囲・構成・受入条件は[開発計画書](docs/hd2d-experiment-plan-2026-11.md)を参照してください。
 

@@ -57,6 +57,36 @@ after Access exists. The generated config explicitly sets `workers_dev: true`,
 `preview_urls: false`, and static
 assets `run_worker_first: true`.
 
+## HD-2D experiments and static asset packaging
+
+The same private Worker serves both projects. Existing `3min-rpg` URLs stay at
+the site root; HD-2D lives at `/hd-2d/`:
+
+```text
+3min-rpg/dist/*.html → staged assets/*.html       → /game1.html, /effect-catalog.html, ...
+hd-2d/dist/*.html    → staged assets/hd-2d/*.html → /hd-2d/index.html, ...
+```
+
+The staging directory is `infra/cloudflare/.generated/assets/`, which is ignored
+by Git. `npm run cf:check` builds both projects, checks types, packages the HTML,
+and runs the infrastructure tests. `npm run cf:assets` can repackage already
+built outputs. Only regular, top-level HTML files from each project's `dist/`
+are included; source files, credentials, subdirectories, and symlinks are not
+deployment inputs. Packaging requires each project's `index.html` and removes
+stale staged assets on a successful rebuild.
+
+Deploy both projects using the existing command:
+
+```sh
+npm run cf:with-env -- npm run cf:deploy:private
+```
+
+No additional Worker, hostname, or Access policy is needed. The `/hd-2d/` paths
+use the same hostname restriction and owner-only JWT verification as the games.
+The initial HD-2D page is a deployment-check entry point; the 3D experiments are
+still to be implemented. Future experiments should emit self-contained HTML
+files directly into `hd-2d/dist/`.
+
 ## Defense in depth
 
 The Worker never uses `ctx.access` (the static-assets router does not forward

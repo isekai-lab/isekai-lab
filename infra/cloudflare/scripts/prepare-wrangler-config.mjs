@@ -12,7 +12,7 @@ const required = (name) => {
 const configPath = resolve(root, ".generated/wrangler.private.jsonc");
 const config = {
   name: required("worker_name"), account_id: required("account_id"), main: "../worker/index.ts", compatibility_date: "2026-11-25", workers_dev: true, preview_urls: false,
-  assets: { directory: "../../../3min-rpg/dist", binding: "ASSETS", run_worker_first: true },
+  assets: { directory: "assets", binding: "ASSETS", run_worker_first: true },
   vars: { PRIVATE_HOSTNAME: required("private_hostname"), ACCESS_AUDIENCE: required("access_audience"), ACCESS_TEAM_DOMAIN: required("access_team_domain"), ACCESS_OWNER_EMAIL: required("owner_email") },
 };
 mkdirSync(dirname(configPath), { recursive: true, mode: 0o700 });

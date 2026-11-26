@@ -1,6 +1,6 @@
 # Cloudflareの本人専用環境をコードで管理する
 
-更新日: 2026-11-25（JST）。ドメインの取得先はCloudflare Registrar。当面は運営者だけがゲームを閲覧できる状態にする。サークル用Gmail・Cloudflareアカウント・Zero Trust Freeの準備を終え、Access設定とゲームの非公開デプロイまで完了した。本人のOTPログインとPC・スマホでのプレイ確認は残っている。
+更新日: 2026-11-26（JST）。ドメインの取得先はCloudflare Registrar。当面は運営者だけがゲームを閲覧できる状態にする。サークル用Gmail・Cloudflareアカウント・Zero Trust Freeの準備を終え、Access設定とゲームの非公開デプロイまで完了した。HD-2D実験の配信確認用入口も同じWorkerへ追加済み。本人のOTPログインとPC・スマホでのプレイ確認は残っている。
 
 非公開URL: https://tensei-private-games.tensei-lab.workers.dev 。登録したサークル用Gmailに届くワンタイムコードでログインする。
 
@@ -76,7 +76,9 @@ Node.js 24以上、プロジェクトの依存関係（`npm ci`）、Terraform 1
 | コマンド | 役割 |
 | --- | --- |
 | `npm run cf:with-env -- <command> ...` | Git追跡外の `.env.local` を読み、トークンを出力せず子プロセスの環境変数へ渡す |
-| `npm run cf:check` | ゲームのビルド、既存コードとWorkerの型検査、認証・bootstrapのローカルテスト |
+| `npm run hd2d:build` | HD-2D実験のHTMLを`hd-2d/dist/`へ生成 |
+| `npm run cf:assets` | 各プロジェクトの配布用HTMLだけを`infra/cloudflare/.generated/assets/`へ集約 |
+| `npm run cf:check` | 両プロジェクトのビルド、既存コードとWorkerの型検査、HTML集約、認証・配布・bootstrapのローカルテスト |
 | `npm run cf:bootstrap-subdomain` | 未作成のworkers.devサブドメインだけAPIで登録。既存値が異なれば変更せず停止 |
 | `terraform -chdir=infra/cloudflare init` | 固定したproviderを取得 |
 | `terraform -chdir=infra/cloudflare plan` | 非公開設定の変更内容を事前確認 |
@@ -87,7 +89,7 @@ Node.js 24以上、プロジェクトの依存関係（`npm ci`）、Terraform 1
 
 実アカウントでの完了条件は、本人がPC/スマホからOTPで閲覧でき、未認証・許可外メール・別hostname・無効なJWTでは4本の配布HTMLを取得できないこと。ローカルテストとdry-runの成功だけで、Cloudflare上での非公開確認が済んだとは扱わない。
 
-### 今回確認できたこと
+### 初回デプロイ時に確認できたこと（2026-11-25）
 
 - `npm run cf:check`: 成功。HTML4本のビルド、既存/Worker双方の型検査、追加8テストを通過。実署名付きJWTで正常系、署名・発行元・対象アプリ・期限・メールの不正、鍵取得失敗、hostname違いを確認した。`pass`の先頭行読み取り、失敗時の値非表示、環境変数優先も確認した。
 - `npm test`: 既存ゲームの32テストすべて成功。ローカルポートを使うテストがあるため、制限外で実行した。
@@ -99,3 +101,15 @@ Node.js 24以上、プロジェクトの依存関係（`npm ci`）、Terraform 1
 - ローカル設定、state、生成ファイル、providerキャッシュ、Wrangler作業領域がGit追跡外であることを確認した。
 
 本人のOTPログイン、許可外メールでのログイン拒否、PC・スマホでの実プレイは未確認。ブラウザ操作接続が使えないため、本人による確認を残す。独自ドメイン購入、有料プランへの変更、一般公開は行っていない。
+
+### HD-2D配信経路の追加（2026-11-26）
+
+HD-2D実験は、同じ本人専用URLの[/hd-2d/](https://tensei-private-games.tensei-lab.workers.dev/hd-2d/)へ配置する。現在は配信確認用の入口で、3D実験本体は未実装。HTMLのビルド・配置は[HD-2D README](../hd-2d/README.md)を参照する。
+
+- 既存6本のHTMLをサイト直下、HD-2Dの`index.html`を`/hd-2d/`配下へ集約し、計7本を実デプロイした。
+- 配布対象は各`dist/`直下の通常のHTMLだけ。非HTML、サブディレクトリ、ソース、認証情報を取り込まず、symlinkや必須index欠落は失敗させる。
+- `npm run cf:check`: 成功。両方のビルド、既存/Workerの型検査、配布・認証等の11テストを通過。`npm test`も42件成功。
+- `npm run cf:with-env -- npm run cf:deploy:private`: 成功。Version IDは`461fc96e-6769-465f-81cd-e1814f11abd2`。設定生成には公式配布元からSHA-256を確認して取得したTerraform 1.14.0を一時ディレクトリから利用した。
+- 実URLの`/`、`/game1.html`、`/fullscreen-mock.html`、`/effect-catalog.html`、`/hd-2d/`、`/hd-2d/index.html`は、未認証で302となりAccessログインへ移動した。HD-2Dの2パスは偽JWT付きでも同様に遮断された。
+- デプロイ前後のCloudflare API読み取りで、本人メール1件だけのAllowポリシーとプレビューURL無効化を確認した。Workerの認証処理とTerraformのAccess設定は変更していない。
+- ブラウザ接続は利用できず、ログイン後の入口表示とスマホでの実操作は未確認。3Dの品質・性能検証は本体実装後に行う。
