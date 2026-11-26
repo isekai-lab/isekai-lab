@@ -8,7 +8,7 @@ export type PathStrip = Readonly<{ points: readonly Vec2[]; width: number; mater
 export type StairSpec = Readonly<{ x: number; z: number; rotation: number; width: number; run: number; rise: number; steps: number }>;
 export type BridgeSpec = Readonly<{ x: number; z: number; rotation: number; length: number; width: number; deckHeight: number; style: "stone" | "wood" }>;
 
-export type ItemKind = "house" | "tree" | "rock" | "lantern" | "ruin" | "market" | "barrels" | "stump" | "shrub" | "flowers";
+export type ItemKind = "house" | "tree" | "rock" | "lantern" | "ruin" | "market" | "barrels" | "stump" | "shrub" | "flowers" | "crystal" | "caveWall" | "stalagmite" | "log";
 export type Placement = Readonly<{ kind: ItemKind; x: number; z: number; height?: number; scale?: number; rotation?: number; variant?: number }>;
 
 export type MapDefinition = Readonly<{
@@ -22,14 +22,21 @@ export type MapDefinition = Readonly<{
   stairs: readonly StairSpec[];
   bridges: readonly BridgeSpec[];
   placements: readonly Placement[];
+  /** A deliberate, readable starting point on the primary walking band. */
+  spawnHint?: Vec2;
   cameraTarget: Vec3Data;
   /** Deliberately data-only extension seam for map-specific stage-2 lighting/camera work. */
   environment?: Readonly<{
     cameraBeta?: number;
     cameraYaw?: number;
     orthoHalfHeight?: number;
+    /** Landscape stays composed by height; portrait uses this independent crop width. */
+    portraitHalfWidth?: number;
     fogDensity?: number;
-    palette?: "day" | "cave";
+    palette?: "day" | "forest" | "cave";
+    sunColor?: string;
+    skyColor?: string;
+    fogColor?: string;
   }>;
 }>;
 

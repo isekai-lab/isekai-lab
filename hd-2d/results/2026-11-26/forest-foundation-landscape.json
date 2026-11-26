@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "mapId": "forest",
+    "preset": "forest-standard-landscape",
+    "presetVersion": 1,
+    "schemaVersion": 1,
+    "contentId": "41bd0cfb9cc6163c",
+    "buildId": "41bd0cfb9cc6163c",
+    "htmlBytes": 7524699
+  },
+  "viewport": {
+    "css": [
+      1280,
+      720
+    ],
+    "render": [
+      1920,
+      1080
+    ],
+    "dpr": 2,
+    "quality": "standard"
+  },
+  "settings": {
+    "mapId": "forest",
+    "zoom": 1,
+    "yaw": 0,
+    "dusk": false,
+    "lightweight": false,
+    "shadows": true,
+    "effects": true,
+    "paused": true
+  },
+  "camera": {
+    "alpha": -0.7853981633974483,
+    "beta": 1.02,
+    "target": [
+      0,
+      1,
+      0.2
+    ],
+    "ortho": [
+      -18.13333333333333,
+      18.13333333333333,
+      10.199999999999998,
+      -10.199999999999998
+    ]
+  },
+  "time": {
+    "animation": "paused-static",
+    "seconds": 0
+  },
+  "sampleCount": 599,
+  "frameIntervalMs": {
+    "p50": 16.69999999552965,
+    "p95": 17.299999997019768
+  },
+  "cpuSceneRenderMs": {
+    "p50": 2.399999998509884,
+    "p95": 2.7000000029802322
+  },
+  "drawCalls": 38,
+  "activeMeshes": 139,
+  "triangles": 20562,
+  "note": "CPU scene.render wall time and frame intervals; no GPU timing or automatic art score."
+}

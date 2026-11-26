@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-26",
+  "reviewer": "agent-visual-review; not user approval",
+  "rubric": "plan section12, provisional ordinal0\u20133; no automatic art metric",
+  "maps": {
+    "town": {
+      "image": "town-v2-r1-landscape.png",
+      "contentId": "0c8a6fe810762d7d",
+      "presetVersion": 2,
+      "scores": {
+        "composition": 2,
+        "pathReadability": 2,
+        "materialPixels": 1,
+        "contactLighting": 1,
+        "identity": 2
+      },
+      "acceptedAsFinal": false,
+      "observations": [
+        "Central walking band and scale marker read more clearly.",
+        "Large repeated paving and uniform blue roofs still dominate.",
+        "Raised ground overlaps canal and the central rear house is not fully supported by its plateau.",
+        "Sparse foreground and uniform lighting still resemble a model layout."
+      ],
+      "next": [
+        "Align canal banks/raised platforms/building footprints.",
+        "Reduce repeated floor dominance, vary architectural surfaces and add coherent foreground framing.",
+        "Strengthen contact and focal light without hiding material problems with blur."
+      ]
+    },
+    "forest": {
+      "image": "forest-v2-r1-landscape.png",
+      "contentId": "0c8a6fe810762d7d",
+      "presetVersion": 2,
+      "scores": {
+        "composition": 1,
+        "pathReadability": 0,
+        "materialPixels": 1,
+        "contactLighting": 1,
+        "identity": 2
+      },
+      "acceptedAsFinal": false,
+      "observations": [
+        "The new joined path is not visible in the actual right-handed render; the floor is all grass.",
+        "Balloon/cone crowns still dominate and exposed branch sticks make shapes less natural.",
+        "Uniform repeated grass and straight stream banks still dominate."
+      ],
+      "next": [
+        "Fix joined-path face winding and verify actual WebGL output.",
+        "Replace dominant rounded crowns with layered original alpha-cutout leaf clusters and irregular silhouettes.",
+        "Frame the walk band with coherent vegetation and improve floor/shore material transitions."
+      ]
+    }
+  }
+}

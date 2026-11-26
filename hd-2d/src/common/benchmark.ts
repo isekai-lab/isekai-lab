@@ -1,5 +1,5 @@
 export const BENCHMARK_SCHEMA_VERSION = 1;
-export const BENCHMARK_PRESET_VERSION = 1;
+export const BENCHMARK_PRESET_VERSION = 2;
 export const WARMUP_MS = 2_000;
 export const MEASURE_MS = 10_000;
 

@@ -37,10 +37,22 @@ test("walk course distinguishes road, stairs, platform, bridge, water, and obsta
 
 test("map query blocks water, returns valid fixed spawn, and only links real surfaces", () => {
   const walk = createMapWalkSurface(maps.town);
-  assert.equal(walk.sample(0, -10), undefined);
-  assert.equal(walk.sample(0, .2)?.surfaceId, "town:bridge:0");
+  assert.equal(walk.sample(-3.8, -10), undefined);
+  assert.equal(walk.sample(-3.8, -1.1)?.surfaceId, "town:bridge:0");
+  assert.deepEqual([walk.spawn.x, walk.spawn.z], [1.2, -1.1], "explicit focal spawn is retained");
   assert.equal(walk.heightAt(walk.spawn.x, walk.spawn.z, walk.spawn.surfaceId), walk.spawn.y);
   for (const edge of walk.connections) assert.ok(walk.surfaceIds.includes(edge.from) && walk.surfaceIds.includes(edge.to));
+});
+
+test("map art contracts keep continuous routes and map-specific landmarks", () => {
+  assert.ok(maps.forest.paths.some((path) => path.points.length >= 5), "forest path has joined route data");
+  assert.ok(maps.cave.placements.some((item) => item.kind === "caveWall"));
+  assert.ok(maps.cave.placements.some((item) => item.kind === "crystal"));
+  for (const map of Object.values(maps)) {
+    const walk = createMapWalkSurface(map);
+    assert.ok(walk.surfaceIds.some((id) => id.includes(":bridge:")), `${map.id} bridge surface`);
+    assert.ok(walk.spawn.surfaceId.length > 0, `${map.id} spawn surface`);
+  }
 });
 
 test("settings reject NaN, unknown maps, partial and malformed JSON", () => {

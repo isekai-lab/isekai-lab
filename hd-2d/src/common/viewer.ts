@@ -95,9 +95,10 @@ export function startViewer(page: Page): void {
     };
     const applyCamera = () => {
         const aspect = Math.max(1, engine.getRenderWidth()) / Math.max(1, engine.getRenderHeight());
-        const environment = maps[settings.mapId].environment;
+        const environment = page === "characters" ? undefined : maps[settings.mapId].environment;
         const desiredHalfHeight = (environment?.orthoHalfHeight ?? 10) / settings.zoom;
-        const halfWidth = Math.max(world.bounds / settings.zoom, desiredHalfHeight * aspect);
+        const portraitWidth = (environment?.portraitHalfWidth ?? world.bounds) / settings.zoom;
+        const halfWidth = aspect < 1 ? portraitWidth : Math.max(world.bounds / settings.zoom, desiredHalfHeight * aspect);
         camera.alpha = (environment?.cameraYaw ?? -Math.PI / 4) + settings.yaw;
         camera.beta = environment?.cameraBeta ?? 1.02;
         camera.radius = 30;
@@ -108,17 +109,18 @@ export function startViewer(page: Page): void {
         camera.orthoBottom = -halfWidth / aspect;
     };
     const applyRendering = () => {
-        const cave = maps[settings.mapId].environment?.palette === "cave";
+        const environment = page === "characters" ? undefined : maps[settings.mapId].environment;
+        const cave = environment?.palette === "cave";
         sun.direction.set(settings.dusk ? -.78 : -.48, settings.dusk ? -.58 : -1, settings.dusk ? .22 : .3);
         sun.intensity = cave ? .85 : settings.dusk ? 1.22 : 1.55;
-        sun.diffuse = Color3.FromHexString(settings.dusk || cave ? "#ef9d68" : "#fff0cc");
+        sun.diffuse = Color3.FromHexString(settings.dusk ? "#ef9d68" : environment?.sunColor ?? "#fff0cc");
         sky.intensity = cave ? .25 : settings.dusk ? .46 : .68;
-        sky.diffuse = Color3.FromHexString(cave ? "#526079" : settings.dusk ? "#7890b5" : "#b7d0d0");
+        sky.diffuse = Color3.FromHexString(settings.dusk ? "#7890b5" : environment?.skyColor ?? "#b7d0d0");
         sky.groundColor = Color3.FromHexString(cave ? "#182033" : settings.dusk ? "#26354e" : "#40535a");
-        scene.clearColor = Color4.FromHexString(cave ? "#101722ff" : settings.dusk ? "#17283cff" : "#8aa1a8ff");
-        scene.fogColor = Color3.FromHexString(cave ? "#303b52" : settings.dusk ? "#5f7184" : "#8aa1a8");
+        scene.clearColor = Color4.FromHexString(cave ? "#101722ff" : settings.dusk ? "#17283cff" : `${environment?.fogColor ?? "#8aa1a8"}ff`);
+        scene.fogColor = Color3.FromHexString(settings.dusk ? "#5f7184" : environment?.fogColor ?? "#8aa1a8");
         scene.ambientColor = Color3.FromHexString(settings.dusk || cave ? "#263653" : "#6c7f80");
-        scene.fogDensity = settings.effects ? maps[settings.mapId].environment?.fogDensity ?? .008 : 0;
+        scene.fogDensity = settings.effects ? environment?.fogDensity ?? .008 : 0;
         scene.shadowsEnabled = settings.shadows;
         pipeline.bloomEnabled = settings.effects;
         pipeline.bloomThreshold = .78;
@@ -153,6 +155,8 @@ export function startViewer(page: Page): void {
         shadows.useBlurExponentialShadowMap = !settings.lightweight;
         shadows.blurKernel = settings.lightweight ? 4 : 12;
         for (const mesh of world.shadowCasters)
+            shadows.addShadowCaster(mesh, false);
+        for (const mesh of actor.root.getChildMeshes(false))
             shadows.addShadowCaster(mesh, false);
         applyCamera();
         applyRendering();

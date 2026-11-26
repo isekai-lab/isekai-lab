@@ -4,7 +4,7 @@ import type { ICanvasRenderingContext, Scene } from "@babylonjs/core";
 export type MaterialName =
   | "grass" | "cobble" | "groundCobble" | "masonry" | "dirt" | "water" | "wood"
   | "plaster" | "roof" | "leaf" | "darkLeaf" | "glow" | "flower"
-  | "canvas" | "iron";
+  | "canvas" | "iron" | "caveRock" | "caveSoil" | "moss" | "crystal";
 export type WorldMaterials = Record<MaterialName, StandardMaterial>;
 
 type Painter = (context: ICanvasRenderingContext, size: number) => void;
@@ -145,6 +145,23 @@ export function createWorldMaterials(scene: Scene): WorldMaterials {
     c.fillStyle = "#56636a";
     for (let y = 5; y < size; y += 14) c.fillRect(0, y, size, 2);
   }, 2);
+  const caveRock = textureMaterial(scene, "caveRock", "#38404b", (c, size) => {
+    masonry(c, size, "#202934", "#59606b");
+    c.fillStyle = "#71717a";
+    for (let y = 6; y < size; y += 19) c.fillRect((y * 5) % size, y, 8, 2);
+  }, 3);
+  const caveSoil = textureMaterial(scene, "caveSoil", "#4b3d42", (c, size) => {
+    c.fillStyle = "#6d554d";
+    for (let y = 4; y < size; y += 11) c.fillRect((y * 7) % size, y, 7, 2);
+    c.fillStyle = "#2d303a";
+    for (let x = 7; x < size; x += 17) c.fillRect(x, (x * 3) % size, 3, 4);
+  }, 5);
+  const moss = textureMaterial(scene, "moss", "#28463b", leafPainter("#4f7051", "#18342e"), 5);
+  const crystal = textureMaterial(scene, "crystal", "#577ca2", (c) => {
+    c.fillStyle = "#a7dded"; c.fillRect(21, 4, 10, 48); c.fillRect(8, 22, 12, 31); c.fillRect(40, 15, 11, 38);
+    c.fillStyle = "#d8ffff"; c.fillRect(24, 8, 4, 39); c.fillRect(11, 26, 4, 21);
+  }, 1);
+  crystal.emissiveColor = Color3.FromHexString("#3b7195");
 
-  return { grass, cobble, groundCobble, masonry: masonryMaterial, dirt, water, wood, plaster, roof, leaf, darkLeaf, glow, flower, canvas, iron };
+  return { grass, cobble, groundCobble, masonry: masonryMaterial, dirt, water, wood, plaster, roof, leaf, darkLeaf, glow, flower, canvas, iron, caveRock, caveSoil, moss, crystal };
 }

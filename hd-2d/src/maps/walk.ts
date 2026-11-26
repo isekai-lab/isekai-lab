@@ -106,10 +106,17 @@ export function createMapWalkSurface(definition: MapDefinition): WalkSurface {
     definition.levels.forEach((_, levelIndex) => connections.push({ from: bridgeId, to: `${definition.id}:level:${levelIndex}` }));
   });
   const obstacles = definition.placements
-    .filter((item) => ["house", "tree", "ruin", "rock"].includes(item.kind))
-    .map((item, index) => ({ id: `${definition.id}:obstacle:${index}`, x: item.x, z: item.z, radius: (item.scale ?? 1) * .7 }));
+    .filter((item) => ["house", "tree", "ruin", "rock", "caveWall", "stalagmite"].includes(item.kind))
+    .map((item, index) => ({
+      id: `${definition.id}:obstacle:${index}`,
+      x: item.x,
+      z: item.z,
+      radius: (item.scale ?? 1) * (item.kind === "house" ? 1.45 : item.kind === "caveWall" ? 1.7 : .7),
+    }));
   const candidates = [-.35, -.6, .35, .6, 0].flatMap((x) => [-.35, -.6, .35, .6, 0].map((z) => ({ x: x * definition.size, z: z * definition.size })));
-  const spawnHint = candidates.find((point) => !isWater(definition, point.x, point.z) && !obstacles.some((obstacle) => Math.hypot(point.x - obstacle.x, point.z - obstacle.z) <= obstacle.radius + .3));
+  const hinted = definition.spawnHint;
+  const isValid = (point: Readonly<{ x: number; z: number }>) => !isWater(definition, point.x, point.z) && !obstacles.some((obstacle) => Math.hypot(point.x - obstacle.x, point.z - obstacle.z) <= obstacle.radius + .3);
+  const spawnHint = hinted && isValid(hinted) ? hinted : candidates.find(isValid);
   if (!spawnHint) throw new Error(`No valid spawn for ${definition.id}`);
   return createWalkSurface(definition.id, regions, connections, obstacles, spawnHint);
 }
