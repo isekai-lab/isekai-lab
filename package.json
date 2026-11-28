@@ -6,6 +6,7 @@
     "node": ">=24"
   },
   "scripts": {
+    "backup:experiments": "python3 -B tools/experiment_backup.py",
     "build": "node 3min-rpg/scripts/build.mjs",
     "hd2d:build": "node hd-2d/scripts/build.mjs",
     "hd2d:preview": "node hd-2d/scripts/serve.mjs",

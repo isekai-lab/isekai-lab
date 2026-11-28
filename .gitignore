@@ -15,3 +15,5 @@ infra/cloudflare/.dev.vars
 infra/cloudflare/.env*
 !infra/cloudflare/.env.local.example
 .wrangler/
+.local/
+/tools/__pycache__/
